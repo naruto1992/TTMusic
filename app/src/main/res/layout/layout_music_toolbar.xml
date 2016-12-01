@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp">
+
+        <ImageView
+            android:id="@+id/ivExpand"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_expand" />
+
+        <ImageView
+            android:id="@+id/ivSearch"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_search" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/tab_net_music"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:background="@drawable/tab_selected"
+                android:scaleType="fitXY"
+                android:src="@drawable/actionbar_discover_normal" />
+
+            <ImageView
+                android:id="@+id/tab_local_music"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/actionbar_music_normal" />
+
+            <ImageView
+                android:id="@+id/tab_friends_music"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/actionbar_friends_normal" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

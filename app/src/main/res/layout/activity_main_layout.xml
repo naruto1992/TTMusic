@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/musicToolBar"
+        layout="@layout/layout_music_toolbar" />
+
+    <include
+        android:id="@+id/musicControlPanel"
+        layout="@layout/layout_music_panel" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragments"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/musicControlPanel"
+        android:layout_below="@id/musicToolBar"
+        android:background="@color/white"
+        android:orientation="vertical" />
+</RelativeLayout>
