@@ -91,7 +91,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         fragments.add(friendsMusic);
         fragmentsPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), fragments));
         fragmentsPager.addOnPageChangeListener(this);
-        switchFragment(0);
+        switchFragment(1);
     }
 
     @Override

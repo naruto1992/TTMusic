@@ -6,6 +6,9 @@
 
     <!---->
     <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray">#CCCCCC</color>
     <color name="half_transparent">#3f000000</color>
     <color name="border_color">#333233</color>
+    <color name="fragment_bg">#EFEFEF</color>
 </resources>

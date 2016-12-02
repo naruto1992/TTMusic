@@ -19,17 +19,17 @@
 
     <item
         android:id="@+id/menu_search_music"
-        android:icon="@drawable/icon_search_dark"
+        android:icon="@drawable/icon_search_music"
         android:title="扫描歌曲" />
 
     <item
         android:id="@+id/menu_wallpaper"
-        android:icon="@drawable/icon_change_background"
+        android:icon="@drawable/icon_wallpaper"
         android:title="壁纸" />
 
     <item
         android:id="@+id/menu_sleep"
-        android:icon="@drawable/icon_sleep_mode"
+        android:icon="@drawable/icon_sleep"
         android:title="睡眠" />
 
     <item
@@ -39,7 +39,7 @@
 
     <item
         android:id="@+id/menu_setting"
-        android:icon="@drawable/icon_preferences_dark"
+        android:icon="@drawable/icon_setting"
         android:title="设置" />
 
     <item

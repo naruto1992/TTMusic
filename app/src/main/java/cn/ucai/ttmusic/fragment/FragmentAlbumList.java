@@ -1,29 +1,41 @@
 package cn.ucai.ttmusic.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public abstract class BaseFragment extends Fragment {
+import cn.ucai.ttmusic.R;
+
+/**
+ * Created by Administrator on 2016/12/2.
+ */
+
+public class FragmentAlbumList extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        View layout = inflater.inflate(R.layout.fragment_album_list, container, false);
+        return layout;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initData();
-        initView();
-        initListener();
     }
 
-    public abstract void initData();
+    @Override
+    public void initView() {
 
-    public abstract void initView();
+    }
 
-    public abstract void initListener();
+    @Override
+    public void initData() {
+
+    }
+
+    @Override
+    public void initListener() {
+
+    }
 }
