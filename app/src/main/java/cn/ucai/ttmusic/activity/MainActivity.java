@@ -1,11 +1,17 @@
 package cn.ucai.ttmusic.activity;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,10 +33,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.ttmusic.R;
+import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.adapter.MyPagerAdapter;
+import cn.ucai.ttmusic.bean.Music;
 import cn.ucai.ttmusic.fragment.FragmentFriendsMusic;
 import cn.ucai.ttmusic.fragment.FragmentLocalMusic;
 import cn.ucai.ttmusic.fragment.FragmentNetMusic;
+import cn.ucai.ttmusic.service.IMusicService;
+import cn.ucai.ttmusic.service.MusicService;
 import cn.ucai.ttmusic.utils.FastBlur;
 import cn.ucai.ttmusic.utils.ToastUtil;
 
@@ -63,6 +73,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     FragmentLocalMusic localMusic;
     FragmentFriendsMusic friendsMusic;
 
+    IMusicService musicService;
+    List<Music> musicList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,8 +84,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mContext = this;
         initDrawerLayout();
         initTabs();
+        initMusicListAndService();
     }
 
+    //////////////////////////////////////view部分/////////////////////////////////////////
     private void initDrawerLayout() {
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
         //navigationView.setItemIconTintList(null);
@@ -189,4 +204,38 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             super.onBackPressed();
         }
     }
+
+    //////////////////////////////////////服务部分/////////////////////////////////////////
+    private void initMusicListAndService() {
+        musicList = TTApplication.getInstance().getMusicList();
+        // 绑定服务
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, new MyServiceConn(), BIND_AUTO_CREATE);
+    }
+
+    //绑定服务的连接类
+    class MyServiceConn implements ServiceConnection {
+
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            musicService = (IMusicService) iBinder;
+            musicService.setMusicList(musicList);
+            musicService.setCurrentItemId(0);
+            musicService.moveToProgress(0);
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+        }
+    }
+
+    //////////////////////////////////////handler部分/////////////////////////////////////////
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+        }
+    };
 }
