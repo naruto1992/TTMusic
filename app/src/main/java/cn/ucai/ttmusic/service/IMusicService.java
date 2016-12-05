@@ -78,4 +78,5 @@ public interface IMusicService extends Serializable {
 
     // 获取当前歌词进度值
     int getLrcIndex();
+
 }

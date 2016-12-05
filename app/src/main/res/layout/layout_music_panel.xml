@@ -5,12 +5,11 @@
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
     android:background="@color/half_transparent"
-    android:gravity="bottom"
     android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="1px"
         android:background="@color/border_color" />
 
     <RelativeLayout
@@ -35,23 +34,17 @@
             android:layout_alignParentRight="true"
             android:orientation="horizontal">
 
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:background="@color/border_color" />
-
-            <FrameLayout
+            <ImageView
+                android:id="@+id/panel_playOrPause"
                 android:layout_width="50dp"
-                android:layout_height="match_parent">
+                android:layout_height="50dp" />
 
-                <Button
-                    android:id="@+id/play"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/mini_play_button"
-                    android:onClick="mini_play" />
-            </FrameLayout>
+            <Button
+                android:id="@+id/panel_next"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:background="@drawable/playbar_next" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -64,21 +57,22 @@
             android:paddingRight="10dp">
 
             <TextView
-                android:id="@+id/musicName"
+                android:id="@+id/panel_musicName"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
                 android:gravity="center_vertical"
                 android:maxLines="1"
-                android:text="歌曲名称"
+                android:text="歌曲名"
                 android:textColor="@color/white"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/musicSinger"
+                android:id="@+id/panel_singerName"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:gravity="top"
-                android:text="歌手"
+                android:maxLines="1"
+                android:text="歌手名"
                 android:textColor="@color/white"
                 android:textSize="12sp" />
         </LinearLayout>

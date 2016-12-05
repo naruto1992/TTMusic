@@ -1,8 +1,10 @@
 package cn.ucai.ttmusic.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,8 +16,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -23,7 +24,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -32,6 +32,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.ucai.ttmusic.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.adapter.MyPagerAdapter;
@@ -59,22 +60,25 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     ImageView tabLocalMusic; //本地音乐图标
     @BindView(R.id.tab_friends_music)
     ImageView tabFriendsMusic; //好友音乐图标
-    @BindView(R.id.play)
-    Button play; //播放键
-    @BindView(R.id.musicName)
-    TextView musicName; //歌曲名字
-    @BindView(R.id.musicSinger)
-    TextView musicSinger; //歌手名字
     @BindView(R.id.fragments)
     ViewPager fragmentsPager;
+
+    @BindView(R.id.panel_playOrPause)
+    ImageView panelPlayOrPause; //暂停或播放
+    @BindView(R.id.panel_musicName)
+    TextView panelMusicName; //歌曲名
+    @BindView(R.id.panel_singerName)
+    TextView panelSingerName; //歌手名
 
     List<Fragment> fragments;
     FragmentNetMusic netMusic;
     FragmentLocalMusic localMusic;
     FragmentFriendsMusic friendsMusic;
 
-    IMusicService musicService;
-    List<Music> musicList;
+    List<Music> musicList; //当前播放列表
+    Music currentMusic; //当前播放歌曲
+    ServiceConnection connection;
+    BroadcastReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,16 +88,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         mContext = this;
         initDrawerLayout();
         initTabs();
-        initMusicListAndService();
+        bindService();
+        initBroadcast();
     }
 
     //////////////////////////////////////view部分/////////////////////////////////////////
     private void initDrawerLayout() {
         mDrawerLayout.setScrimColor(Color.TRANSPARENT);
         //navigationView.setItemIconTintList(null);
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bg002);
-        navigationView.setBackground(new BitmapDrawable(FastBlur.blur(bitmap, 30, false)));
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     private void initTabs() {
@@ -119,30 +123,37 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {
-    }
+    public void onPageScrollStateChanged(int state) {}
 
+    //////////////////////////////////////点击事件/////////////////////////////////////////
+
+    /**
+     * 菜单点击
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_mode_normal:
                 item.setChecked(true);
-                ToastUtil.show(mContext, "普通模式");
+                musicService.setPlayMode(I.PlayMode.MODE_NORMAL);
                 break;
             case R.id.menu_mode_shuffle:
                 item.setChecked(true);
-                ToastUtil.show(mContext, "随机播放");
+                musicService.setPlayMode(I.PlayMode.MODE_SHUFFLE);
                 break;
             case R.id.menu_mode_single:
                 item.setChecked(true);
-                ToastUtil.show(mContext, "单曲循环");
+                musicService.setPlayMode(I.PlayMode.MODE_SINGLE);
                 break;
         }
         mDrawerLayout.closeDrawers();
         return false;
     }
 
-    @OnClick({R.id.ivExpand, R.id.ivSearch})
+    /**
+     * 菜单栏、控制栏
+     */
+    @OnClick({R.id.ivExpand, R.id.ivSearch, R.id.musicControlPanel})
     public void initToolbarAction(View v) {
         switch (v.getId()) {
             case R.id.ivExpand:
@@ -152,9 +163,16 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 break;
             case R.id.ivSearch:
                 break;
+            case R.id.musicControlPanel:
+                Intent intent = new Intent(mContext, PlayActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
+    /**
+     * 标签栏
+     */
     @OnClick({R.id.tab_net_music, R.id.tab_local_music, R.id.tab_friends_music})
     public void switchTabs(View v) {
         int index;
@@ -196,21 +214,65 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         lastIndex = index;
     }
 
+    long exitTime = 0;// 退出时间
+
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if ((System.currentTimeMillis() - exitTime) > 2000) {
+            ToastUtil.show(mContext, "再按一下返回到桌面");
+            exitTime = System.currentTimeMillis();
         } else {
-            super.onBackPressed();
+            // 返回桌面，不退出程序
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.addCategory(Intent.CATEGORY_HOME);
+            startActivity(home);
         }
     }
 
+    //播放或暂停
+    @OnClick(R.id.panel_playOrPause)
+    public void playOrPause(View v) {
+        ImageView view = (ImageView) v;
+        if (musicService == null) {
+            ToastUtil.show(mContext, "未启动服务");
+            return;
+        }
+        switch (musicService.getState()) {
+            case I.PlayState.IS_PAUSE:
+                musicService.start();
+                view.setImageResource(R.drawable.playbar_btn_pause);
+                break;
+            case I.PlayState.IS_PLAY:
+                musicService.pause();
+                view.setImageResource(R.drawable.playbar_btn_play);
+                break;
+            case I.PlayState.IS_INIT:
+                musicService.setMusicList(musicList);
+                musicService.playMusic(0);
+                break;
+        }
+    }
+
+    //下一首
+    @OnClick(R.id.panel_next)
+    public void playNext(View v) {
+        musicService.nextMusic();
+    }
+
     //////////////////////////////////////服务部分/////////////////////////////////////////
-    private void initMusicListAndService() {
+    public void bindService() {
         musicList = TTApplication.getInstance().getMusicList();
+        if (musicList == null || musicList.size() == 0) {
+            musicService = null;
+            ToastUtil.show(mContext, "当前没有可播放音乐，无法启动服务");
+            return;
+        }
         // 绑定服务
-        Intent intent = new Intent(this, MusicService.class);
-        bindService(intent, new MyServiceConn(), BIND_AUTO_CREATE);
+        Intent intent = new Intent(mContext, MusicService.class);
+        connection = new MyServiceConn();
+        bindService(intent, connection, BIND_AUTO_CREATE);
     }
 
     //绑定服务的连接类
@@ -219,10 +281,11 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             musicService = (IMusicService) iBinder;
-            musicService.setMusicList(musicList);
-            musicService.setCurrentItemId(0);
-            musicService.moveToProgress(0);
-
+//            musicService.setMusicList(musicList);
+//            musicService.setCurrentItemId(0);
+//            musicService.moveToProgress(0);
+            //启动handler
+            handler.sendEmptyMessage(PLAY_MUSIC);
         }
 
         @Override
@@ -230,12 +293,60 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    //////////////////////////////////////handler部分/////////////////////////////////////////
+    //////////////////////////////////////handler、广播/////////////////////////////////////////
+
+    static final int PLAY_MUSIC = 0X000;
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
+            if (msg.what == PLAY_MUSIC) {
+                if (musicService.isPlay()) {
+                    currentMusic = musicService.getCurrentMusic();
+                    //设置显示
+                    panelMusicName.setText(currentMusic.getTitle());
+                    panelSingerName.setText(currentMusic.getSinger());
+                    panelPlayOrPause.setImageResource(R.drawable.playbar_btn_pause);
+                } else {
+                    panelPlayOrPause.setImageResource(R.drawable.playbar_btn_play);
+                }
+                handler.sendEmptyMessageDelayed(PLAY_MUSIC, 1000);//每一秒刷新一次
+            }
         }
     };
+
+    private void initBroadcast() {
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(I.BroadCast.MUSIC_ACTION);
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                switch (intent.getAction()) {
+                    case I.BroadCast.MUSIC_ACTION:
+                        if (intent == null || intent.getExtras() == null) {
+                            return;
+                        }
+                        Bundle data = intent.getExtras();
+                        List<Music> list = (List<Music>) data.getSerializable(I.BroadCast.MUSIC_LIST);
+                        int position = data.getInt(I.BroadCast.MUSIC_POSITION, 0);
+                        musicService.setMusicList(list);
+                        musicService.pause();
+                        musicService.playMusic(position);
+                        break;
+                }
+            }
+        };
+        broadcastManager.registerReceiver(mReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (connection != null) {
+            unbindService(connection);
+        }
+        if (mReceiver != null) {
+            broadcastManager.unregisterReceiver(mReceiver);
+        }
+        super.onDestroy();
+    }
 }

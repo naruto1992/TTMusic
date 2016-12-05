@@ -21,10 +21,9 @@ public class MusicService extends Service {
     List<Music> songs; // 要播放的歌曲集合
 
     int currentItem = 0; //当前播放第几首歌
-    int playMode = 0; // 播放模式
+    int playMode = 0; // 播放模式,0为普通模式，1为单曲循环，2为随机播放
     int playState = 0; // 当前状态，0为初始化，1为播放，2为暂停
     int currentProgress = 0; //当前播放进度
-
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -61,7 +60,7 @@ public class MusicService extends Service {
         //播放歌曲
         @Override
         public void playMusic(int position) {
-            playMusic(position);
+            play(songs, position);
         }
 
         //下一首
@@ -78,13 +77,13 @@ public class MusicService extends Service {
                     if (--currentItem < 0) {
                         currentItem = songs.size() - 1;
                     }
-                    playMusic(currentItem);
+                    play(songs, currentItem);
                     break;
                 case I.PlayMode.MODE_SINGLE:
-                    playMusic(currentItem);
+                    play(songs, currentItem);
                     break;
                 case I.PlayMode.MODE_SHUFFLE:
-                    playMusic(new Random().nextInt(songs.size()) + 1);
+                    play(songs, new Random().nextInt(songs.size()) + 1);
                     break;
             }
         }
@@ -183,16 +182,16 @@ public class MusicService extends Service {
 
         @Override
         public void showLrc(int position) {
-
         }
 
         @Override
         public int getLrcIndex() {
             return 0;
         }
+
     }
 
-    private void playMusic(List<Music> musicList, int position) {
+    private void play(List<Music> musicList, int position) {
         try {
             // 重置mediaplay
             mediaPlayer.reset();
@@ -225,13 +224,13 @@ public class MusicService extends Service {
                 if (++currentItem >= songs.size()) {
                     currentItem = 0;
                 }
-                playMusic(songs, currentItem);
+                play(songs, currentItem);
                 break;
             case I.PlayMode.MODE_SINGLE:
-                playMusic(songs, currentItem);
+                play(songs, currentItem);
                 break;
             case I.PlayMode.MODE_SHUFFLE:
-                playMusic(songs, new Random().nextInt(songs.size()) + 1);
+                play(songs, new Random().nextInt(songs.size()) + 1);
                 break;
         }
     }

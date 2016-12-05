@@ -1,21 +1,23 @@
 package cn.ucai.ttmusic.activity;
 
-import android.graphics.Color;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
+import cn.ucai.ttmusic.service.IMusicService;
 import cn.ucai.ttmusic.utils.StatusBarUtil;
 
-/**
- * Created by Administrator on 2016/11/30.
- */
+public abstract class BaseActivity extends AppCompatActivity {
 
-public class BaseActivity extends AppCompatActivity {
+    IMusicService musicService; //当前播放服务
+    LocalBroadcastManager broadcastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarUtil.setStatusBarResource(this, android.R.color.transparent);
+        broadcastManager = LocalBroadcastManager.getInstance(this);
     }
+
 }

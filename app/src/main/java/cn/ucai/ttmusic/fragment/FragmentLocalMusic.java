@@ -17,10 +17,6 @@ import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.adapter.MyPagerAdapter;
 
-/**
- * Created by Administrator on 2016/12/1.
- */
-
 public class FragmentLocalMusic extends BaseFragment {
 
     @BindView(R.id.local_music_tabs)

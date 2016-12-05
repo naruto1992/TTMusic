@@ -1,7 +1,10 @@
 package cn.ucai.ttmusic.bean;
 
+import java.io.Serializable;
+
 //歌曲实体类
-public class Music {
+public class Music implements Serializable {
+
     private int songId; // 歌曲在整个列表中的id
     private String title;// 歌曲名称
     private String singer;// 歌手

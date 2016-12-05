@@ -1,7 +1,9 @@
 package cn.ucai.ttmusic.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,10 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import java.io.Serializable;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.ucai.ttmusic.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.adapter.MusicListAdapter;
@@ -31,6 +35,8 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
     List<Music> musicList;
     MusicListAdapter adapter;
 
+    LocalBroadcastManager broadcastManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_music_list, container, false);
@@ -42,6 +48,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        broadcastManager = LocalBroadcastManager.getInstance(mContext);
     }
 
     @Override
@@ -70,11 +77,21 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
 
     @Override
     public void onHeaderClick() {
-
+        Intent intent = new Intent(I.BroadCast.MUSIC_ACTION);
+        Bundle data = new Bundle();
+        data.putSerializable(I.BroadCast.MUSIC_LIST, (Serializable) musicList);
+        data.putInt(I.BroadCast.MUSIC_POSITION, 0);
+        intent.putExtras(data);
+        broadcastManager.sendBroadcast(intent);
     }
 
     @Override
     public void onItemClick(int position, Music music) {
-        ToastUtil.show(mContext, music.toString());
+        Intent intent = new Intent(I.BroadCast.MUSIC_ACTION);
+        Bundle data = new Bundle();
+        data.putSerializable(I.BroadCast.MUSIC_LIST, (Serializable) musicList);
+        data.putInt(I.BroadCast.MUSIC_POSITION, position);
+        intent.putExtras(data);
+        broadcastManager.sendBroadcast(intent);
     }
 }

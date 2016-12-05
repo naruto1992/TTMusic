@@ -14,5 +14,10 @@ public interface I {
         int MODE_SHUFFLE = 2;
     }
 
+    interface BroadCast {
+        String MUSIC_ACTION = "play_music";
+        String MUSIC_LIST = "musicList";
+        String MUSIC_POSITION = "musicPosition";
+    }
 
 }
