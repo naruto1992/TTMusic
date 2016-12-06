@@ -52,7 +52,7 @@ public class MusicUtil {
                     // 获得歌曲名称
                     String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                     // 获取歌曲文件格式后缀׺
-                    String sbr = name.substring(name.length() - 3, name.length());
+                    String sbr = name.substring(name.lastIndexOf(".") + 1);
                     // ֧支持mp3格式
                     if (sbr.equals("mp3")) {
                         m.setSongId(songId);

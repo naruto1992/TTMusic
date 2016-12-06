@@ -19,7 +19,12 @@ public interface I {
     }
 
     interface BroadCast {
-        String MUSIC_ACTION = "play_music";
+        String MUSIC_PLAY = "play_music";
+        String MUSIC_FRONT = "play_front";
+        String MUSIC_NEXT = "play_next";
+        String MUSIC_PAUSE = "play_pause";
+        String NOTIFY_CANCEL = "notify_cancel";
+
         String MUSIC_LIST = "musicList";
         String MUSIC_POSITION = "musicPosition";
     }

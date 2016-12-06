@@ -15,6 +15,18 @@
 
         <service android:name=".service.MusicService" />
 
+        <receiver
+            android:name=".receiver.MusciReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="play_music" />
+                <action android:name="play_front" />
+                <action android:name="play_next" />
+                <action android:name="play_pause" />
+                <action android:name="notify_cancel" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".activity.SplashActivity"
             android:screenOrientation="portrait"

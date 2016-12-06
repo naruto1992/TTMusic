@@ -6,23 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -43,7 +38,6 @@ import cn.ucai.ttmusic.fragment.FragmentNetMusic;
 import cn.ucai.ttmusic.service.IMusicService;
 import cn.ucai.ttmusic.service.MusicService;
 import cn.ucai.ttmusic.utils.ExitUtil;
-import cn.ucai.ttmusic.utils.FastBlur;
 import cn.ucai.ttmusic.utils.ToastUtil;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -79,7 +73,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     List<Music> musicList; //当前播放列表
     Music currentMusic; //当前播放歌曲
     ServiceConnection connection;
-    BroadcastReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +83,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         initDrawerLayout();
         initTabs();
         bindService();
-        initBroadcast();
     }
 
     //////////////////////////////////////view部分/////////////////////////////////////////
@@ -310,6 +302,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //            musicService.setCurrentItemId(0);
 //            musicService.moveToProgress(0);
             //启动handler
+            TTApplication.getInstance().setMusicService(musicService);
             handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
         }
 
@@ -341,30 +334,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     };
 
-    private void initBroadcast() {
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(I.BroadCast.MUSIC_ACTION);
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                switch (intent.getAction()) {
-                    case I.BroadCast.MUSIC_ACTION:
-                        if (intent == null || intent.getExtras() == null) {
-                            return;
-                        }
-                        Bundle data = intent.getExtras();
-                        List<Music> list = (List<Music>) data.getSerializable(I.BroadCast.MUSIC_LIST);
-                        int position = data.getInt(I.BroadCast.MUSIC_POSITION, 0);
-                        musicService.setMusicList(list);
-                        musicService.pause();
-                        musicService.playMusic(position);
-                        break;
-                }
-            }
-        };
-        broadcastManager.registerReceiver(mReceiver, intentFilter);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -377,9 +346,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     protected void onDestroy() {
         if (connection != null) {
             unbindService(connection);
-        }
-        if (mReceiver != null) {
-            broadcastManager.unregisterReceiver(mReceiver);
         }
         super.onDestroy();
     }

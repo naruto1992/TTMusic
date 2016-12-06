@@ -11,13 +11,11 @@ import cn.ucai.ttmusic.utils.StatusBarUtil;
 public abstract class BaseActivity extends AppCompatActivity {
 
     IMusicService musicService; //当前播放服务
-    LocalBroadcastManager broadcastManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        StatusBarUtil.setStatusBarResource(this, android.R.color.transparent);
-        broadcastManager = LocalBroadcastManager.getInstance(this);
     }
 
 }
