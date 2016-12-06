@@ -13,6 +13,8 @@ public interface IMusicService extends Serializable {
     // 获得当前播放进度
     int getCurrentTime();
 
+    void setCurrentTime(int progress);
+
     // 跳转到指定进度
     void moveToProgress(int progress);
 

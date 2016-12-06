@@ -14,10 +14,18 @@ public interface I {
         int MODE_SHUFFLE = 2;
     }
 
+    interface Handler {
+        int PLAY_MUSIC = 0X000;
+    }
+
     interface BroadCast {
         String MUSIC_ACTION = "play_music";
         String MUSIC_LIST = "musicList";
         String MUSIC_POSITION = "musicPosition";
+    }
+
+    interface Intent {
+        String MUSIC_SERVICE = "music_service";
     }
 
 }

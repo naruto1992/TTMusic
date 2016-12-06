@@ -1,17 +1,15 @@
 package cn.ucai.ttmusic;
 
 import android.app.Application;
+import android.content.Context;
 
 import java.util.List;
 
 import cn.ucai.ttmusic.bean.Music;
 
-/**
- * Created by Administrator on 2016/11/30.
- */
-
 public class TTApplication extends Application {
 
+    Context appContext;
     static TTApplication application;
     List<Music> musicList;
 
@@ -33,5 +31,6 @@ public class TTApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        appContext = this;
     }
 }

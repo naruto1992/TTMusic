@@ -42,6 +42,7 @@ import cn.ucai.ttmusic.fragment.FragmentLocalMusic;
 import cn.ucai.ttmusic.fragment.FragmentNetMusic;
 import cn.ucai.ttmusic.service.IMusicService;
 import cn.ucai.ttmusic.service.MusicService;
+import cn.ucai.ttmusic.utils.ExitUtil;
 import cn.ucai.ttmusic.utils.FastBlur;
 import cn.ucai.ttmusic.utils.ToastUtil;
 
@@ -123,7 +124,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     @Override
-    public void onPageScrollStateChanged(int state) {}
+    public void onPageScrollStateChanged(int state) {
+    }
 
     //////////////////////////////////////点击事件/////////////////////////////////////////
 
@@ -145,6 +147,24 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 item.setChecked(true);
                 musicService.setPlayMode(I.PlayMode.MODE_SINGLE);
                 break;
+            case R.id.menu_search_music:
+                ToastUtil.show(mContext, "扫描音乐(开发中)");
+                break;
+            case R.id.menu_wallpaper:
+                ToastUtil.show(mContext, "壁纸(开发中)");
+                break;
+            case R.id.menu_sleep:
+                ToastUtil.show(mContext, "睡眠(开发中)");
+                break;
+            case R.id.menu_about:
+                ToastUtil.show(mContext, "关于(开发中)");
+                break;
+            case R.id.menu_setting:
+                ToastUtil.show(mContext, "设置(开发中)");
+                break;
+            case R.id.menu_exit:
+                new ExitUtil().exit(mContext);
+                break;
         }
         mDrawerLayout.closeDrawers();
         return false;
@@ -162,9 +182,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
                 break;
             case R.id.ivSearch:
+                ToastUtil.show(mContext, "搜索(开发中)");
                 break;
             case R.id.musicControlPanel:
+                if (musicService == null || currentMusic == null) {
+                    return;
+                }
                 Intent intent = new Intent(mContext, PlayActivity.class);
+                intent.putExtra(I.Intent.MUSIC_SERVICE, musicService);
                 startActivity(intent);
                 break;
         }
@@ -235,8 +260,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     @OnClick(R.id.panel_playOrPause)
     public void playOrPause(View v) {
         ImageView view = (ImageView) v;
-        if (musicService == null) {
-            ToastUtil.show(mContext, "未启动服务");
+        if (musicList == null || musicList.size() == 0 || musicService == null) {
+            ToastUtil.show(mContext, "无法启动服务");
             return;
         }
         switch (musicService.getState()) {
@@ -285,7 +310,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //            musicService.setCurrentItemId(0);
 //            musicService.moveToProgress(0);
             //启动handler
-            handler.sendEmptyMessage(PLAY_MUSIC);
+            handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
         }
 
         @Override
@@ -295,12 +320,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     //////////////////////////////////////handler、广播/////////////////////////////////////////
 
-    static final int PLAY_MUSIC = 0X000;
-
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == PLAY_MUSIC) {
+            if (msg.what == I.Handler.PLAY_MUSIC) {
                 if (musicService.isPlay()) {
                     currentMusic = musicService.getCurrentMusic();
                     //设置显示
@@ -310,7 +333,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 } else {
                     panelPlayOrPause.setImageResource(R.drawable.playbar_btn_play);
                 }
-                handler.sendEmptyMessageDelayed(PLAY_MUSIC, 1000);//每一秒刷新一次
+                //设置模式
+                navigationView.getMenu().getItem(musicService.getPlayMode()).setChecked(true);
+
+                handler.sendEmptyMessageDelayed(I.Handler.PLAY_MUSIC, 500);//每半秒刷新一次
             }
         }
     };
@@ -337,6 +363,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             }
         };
         broadcastManager.registerReceiver(mReceiver, intentFilter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (musicService != null) {
+            handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
+        }
     }
 
     @Override

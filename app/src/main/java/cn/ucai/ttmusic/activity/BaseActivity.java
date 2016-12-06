@@ -16,7 +16,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        StatusBarUtil.setStatusBarResource(this, android.R.color.transparent);
+//        StatusBarUtil.setStatusBarResource(this, android.R.color.transparent);
         broadcastManager = LocalBroadcastManager.getInstance(this);
     }
 

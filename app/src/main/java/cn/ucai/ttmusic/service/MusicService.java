@@ -50,6 +50,11 @@ public class MusicService extends Service {
             }
         }
 
+        @Override
+        public void setCurrentTime(int progress) {
+            currentProgress = progress;
+        }
+
         //跳到指定进度
         @Override
         public void moveToProgress(int progress) {

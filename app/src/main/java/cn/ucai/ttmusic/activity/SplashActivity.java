@@ -15,7 +15,7 @@ import cn.ucai.ttmusic.utils.MusicUtil;
 public class SplashActivity extends BaseActivity {
 
     Context mContext;
-    static final long DELAY_TIME = 3000;
+    static final long DELAY_TIME = 2000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
