@@ -25,6 +25,10 @@ public class TTApplication extends Application {
         return application;
     }
 
+    public Context getAppContext() {
+        return appContext;
+    }
+
     public List<Music> getMusicList() {
         return musicList;
     }

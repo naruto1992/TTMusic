@@ -1,17 +1,25 @@
 package cn.ucai.ttmusic.service;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.widget.RemoteViews;
 
 import java.util.List;
 import java.util.Random;
 
 import cn.ucai.ttmusic.I;
+import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
+import cn.ucai.ttmusic.activity.PlayActivity;
 import cn.ucai.ttmusic.bean.LrcContent;
 import cn.ucai.ttmusic.bean.Music;
 

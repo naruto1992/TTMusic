@@ -1,11 +1,13 @@
 package cn.ucai.ttmusic.activity;
 
-import android.content.BroadcastReceiver;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,12 +15,15 @@ import android.os.IBinder;
 import android.os.Message;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.NotificationCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -38,6 +43,7 @@ import cn.ucai.ttmusic.fragment.FragmentNetMusic;
 import cn.ucai.ttmusic.service.IMusicService;
 import cn.ucai.ttmusic.service.MusicService;
 import cn.ucai.ttmusic.utils.ExitUtil;
+import cn.ucai.ttmusic.utils.NotificationUtil;
 import cn.ucai.ttmusic.utils.ToastUtil;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, ViewPager.OnPageChangeListener {
@@ -260,14 +266,20 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case I.PlayState.IS_PAUSE:
                 musicService.start();
                 view.setImageResource(R.drawable.playbar_btn_pause);
+                Intent play = new Intent(I.BroadCast.MUSIC_PLAY);
+                mContext.sendBroadcast(play);
                 break;
             case I.PlayState.IS_PLAY:
                 musicService.pause();
                 view.setImageResource(R.drawable.playbar_btn_play);
+                Intent pause = new Intent(I.BroadCast.MUSIC_PAUSE);
+                mContext.sendBroadcast(pause);
                 break;
             case I.PlayState.IS_INIT:
                 musicService.setMusicList(musicList);
                 musicService.playMusic(0);
+                Intent init = new Intent(I.BroadCast.MUSIC_PLAY);
+                mContext.sendBroadcast(init);
                 break;
         }
     }
@@ -311,7 +323,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
     }
 
-    //////////////////////////////////////handler、广播/////////////////////////////////////////
+    //////////////////////////////////////handler、广播、通知/////////////////////////////////////////
 
     private Handler handler = new Handler() {
         @Override
