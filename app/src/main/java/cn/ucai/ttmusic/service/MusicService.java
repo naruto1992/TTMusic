@@ -291,6 +291,7 @@ public class MusicService extends Service {
 
         builder.setCustomBigContentView(remoteViews);
         Notification notification = builder.setContentIntent(pi).build();
+
         manger.notify(I.Notification.NOTIFY_ID, notification);
     }
 

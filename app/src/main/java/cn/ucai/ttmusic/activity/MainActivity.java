@@ -141,6 +141,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
      */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        if (musicService == null) {
+            return false;
+        }
         switch (item.getItemId()) {
             case R.id.menu_mode_normal:
                 item.setChecked(true);
@@ -291,7 +294,15 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     //下一首
     @OnClick(R.id.panel_next)
     public void playNext(View v) {
-        musicService.nextMusic();
+        if (musicService == null) {
+            return;
+        }
+        if (musicService.getMusicList() == null) {
+            musicService.setMusicList(musicList);
+            musicService.playMusic(0);
+        } else {
+            musicService.nextMusic();
+        }
     }
 
     //////////////////////////////////////服务部分/////////////////////////////////////////

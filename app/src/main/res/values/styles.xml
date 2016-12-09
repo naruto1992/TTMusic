@@ -9,10 +9,7 @@
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
     </style>
 
-    <style name="full_screen_style" parent="AppTheme">
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTranslucentNavigation">false</item>
-    </style>
+    <style name="full_screen_style" parent="AppTheme"/>
 
     <style name="style_wallpaper">
         <item name="android:background">@drawable/bg_main</item>
