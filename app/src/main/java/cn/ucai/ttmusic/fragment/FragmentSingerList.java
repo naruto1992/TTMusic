@@ -29,9 +29,4 @@ public class FragmentSingerList extends BaseFragment {
     public void initData() {
 
     }
-
-    @Override
-    public void initListener() {
-
-    }
 }

@@ -33,9 +33,4 @@ public class FragmentNetMusic extends BaseFragment {
     public void initData() {
 
     }
-
-    @Override
-    public void initListener() {
-
-    }
 }

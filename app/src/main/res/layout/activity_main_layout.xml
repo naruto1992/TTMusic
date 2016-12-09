@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/style_wallpaper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_main"
     android:orientation="vertical">
 
     <include
@@ -14,11 +14,16 @@
         layout="@layout/layout_music_panel" />
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/fragments"
+        android:id="@+id/fragmentPagers"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/musicControlPanel"
         android:layout_below="@id/musicToolBar"
-        android:background="@color/white"
-        android:orientation="vertical" />
+        android:background="@color/white" />
+
+    <RelativeLayout
+        android:id="@+id/fragmentContainers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/musicControlPanel" />
 </RelativeLayout>

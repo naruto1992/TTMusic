@@ -5,7 +5,7 @@
         <color android:color="#d4d1d1" />
     </item>
     <item android:state_pressed="false">
-        <color android:color="@color/white" />
+        <color android:color="@color/fragment_bg" />
     </item>
 
 </selector>

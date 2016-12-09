@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.ttmusic.I;
 import cn.ucai.ttmusic.R;
+import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.bean.Music;
 import cn.ucai.ttmusic.service.IMusicService;
 import cn.ucai.ttmusic.utils.TimeUtil;
@@ -58,7 +59,7 @@ public class PlayActivity extends BaseActivity {
         // 保持屏幕唤醒
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mContext = this;
-        musicService = (IMusicService) getIntent().getSerializableExtra(I.Intent.MUSIC_SERVICE);
+        musicService = TTApplication.getInstance().getMusicService();
         if (musicService == null) {
             return;
         }

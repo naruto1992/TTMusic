@@ -33,9 +33,4 @@ public class FragmentAlbumList extends BaseFragment {
     public void initData() {
 
     }
-
-    @Override
-    public void initListener() {
-
-    }
 }

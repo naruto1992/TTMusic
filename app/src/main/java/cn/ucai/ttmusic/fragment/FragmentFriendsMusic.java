@@ -34,8 +34,4 @@ public class FragmentFriendsMusic extends BaseFragment {
 
     }
 
-    @Override
-    public void initListener() {
-
-    }
 }

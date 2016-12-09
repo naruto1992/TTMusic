@@ -18,12 +18,10 @@ public abstract class BaseFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         initData();
         initView();
-        initListener();
     }
 
     public abstract void initData();
 
     public abstract void initView();
 
-    public abstract void initListener();
 }

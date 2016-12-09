@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_mode_normal"
+            android:icon="@drawable/mode_normal"
+            android:title="普通模式" />
+
+        <item
+            android:id="@+id/menu_mode_single"
+            android:icon="@drawable/mode_single"
+            android:title="单曲循环" />
+
+        <item
+            android:id="@+id/menu_mode_shuffle"
+            android:icon="@drawable/mode_shuffle"
+            android:title="随机播放" />
+
+    </group>
+
+    <item
+        android:id="@+id/menu_search_music"
+        android:icon="@drawable/menu_search_music"
+        android:title="扫描歌曲" />
+
+    <item
+        android:id="@+id/menu_wallpaper"
+        android:icon="@drawable/menu_wallpaper"
+        android:title="壁纸" />
+
+    <item
+        android:id="@+id/menu_sleep"
+        android:icon="@drawable/menu_sleep"
+        android:title="睡眠" />
+
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/menu_about"
+        android:title="关于" />
+
+    <item
+        android:id="@+id/menu_setting"
+        android:icon="@drawable/menu_setting"
+        android:title="设置" />
+
+    <item
+        android:id="@+id/menu_exit"
+        android:icon="@drawable/menu_exit"
+        android:title="退出" />
+</menu>

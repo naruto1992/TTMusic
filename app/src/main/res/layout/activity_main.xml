@@ -20,6 +20,6 @@
         android:clipToPadding="false"
         android:fitsSystemWindows="false"
         app:headerLayout="@layout/menu_header_layout"
-        app:menu="@menu/menu_main" />
+        app:menu="@menu/menu_drawer" />
 
 </android.support.v4.widget.DrawerLayout>

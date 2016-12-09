@@ -62,11 +62,6 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
     }
 
     @Override
-    public void initListener() {
-
-    }
-
-    @Override
     public List<Music> getCurrentMusicList() {
         return musicList;
     }

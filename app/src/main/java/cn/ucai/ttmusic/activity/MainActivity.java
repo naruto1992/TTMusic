@@ -23,6 +23,7 @@ import android.support.v7.app.NotificationCompat;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ import cn.ucai.ttmusic.adapter.MyPagerAdapter;
 import cn.ucai.ttmusic.bean.Music;
 import cn.ucai.ttmusic.fragment.FragmentFriendsMusic;
 import cn.ucai.ttmusic.fragment.FragmentLocalMusic;
+import cn.ucai.ttmusic.fragment.FragmentMyMusic;
 import cn.ucai.ttmusic.fragment.FragmentNetMusic;
 import cn.ucai.ttmusic.service.IMusicService;
 import cn.ucai.ttmusic.service.MusicService;
@@ -61,7 +63,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     ImageView tabLocalMusic; //本地音乐图标
     @BindView(R.id.tab_friends_music)
     ImageView tabFriendsMusic; //好友音乐图标
-    @BindView(R.id.fragments)
+    @BindView(R.id.fragmentPagers)
     ViewPager fragmentsPager;
 
     @BindView(R.id.panel_playOrPause)
@@ -73,7 +75,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     List<Fragment> fragments;
     FragmentNetMusic netMusic;
-    FragmentLocalMusic localMusic;
+    FragmentMyMusic myMusic;
     FragmentFriendsMusic friendsMusic;
 
     List<Music> musicList; //当前播放列表
@@ -102,10 +104,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void initTabs() {
         fragments = new ArrayList<>();
         netMusic = new FragmentNetMusic();
-        localMusic = new FragmentLocalMusic();
+        myMusic = new FragmentMyMusic();
         friendsMusic = new FragmentFriendsMusic();
         fragments.add(netMusic);
-        fragments.add(localMusic);
+        fragments.add(myMusic);
         fragments.add(friendsMusic);
         fragmentsPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), fragments));
         fragmentsPager.addOnPageChangeListener(this);
@@ -123,6 +125,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    public void goToFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragmentContainers, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     //////////////////////////////////////点击事件/////////////////////////////////////////
@@ -187,7 +196,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     return;
                 }
                 Intent intent = new Intent(mContext, PlayActivity.class);
-                intent.putExtra(I.Intent.MUSIC_SERVICE, musicService);
                 startActivity(intent);
                 break;
         }
@@ -241,7 +249,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else if ((System.currentTimeMillis() - exitTime) > 2000) {
             ToastUtil.show(mContext, "再按一下返回到桌面");
