@@ -266,20 +266,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case I.PlayState.IS_PAUSE:
                 musicService.start();
                 view.setImageResource(R.drawable.playbar_btn_pause);
-                Intent play = new Intent(I.BroadCast.MUSIC_PLAY);
-                mContext.sendBroadcast(play);
                 break;
             case I.PlayState.IS_PLAY:
                 musicService.pause();
                 view.setImageResource(R.drawable.playbar_btn_play);
-                Intent pause = new Intent(I.BroadCast.MUSIC_PAUSE);
-                mContext.sendBroadcast(pause);
                 break;
             case I.PlayState.IS_INIT:
                 musicService.setMusicList(musicList);
                 musicService.playMusic(0);
-                Intent init = new Intent(I.BroadCast.MUSIC_PLAY);
-                mContext.sendBroadcast(init);
                 break;
         }
     }
@@ -313,8 +307,9 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //            musicService.setMusicList(musicList);
 //            musicService.setCurrentItemId(0);
 //            musicService.moveToProgress(0);
-            //启动handler
+            //很重要!!!
             TTApplication.getInstance().setMusicService(musicService);
+            //启动handler
             handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
         }
 

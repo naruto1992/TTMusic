@@ -6,13 +6,16 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.widget.RemoteViews;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -33,6 +36,9 @@ public class MusicService extends Service {
     int playState = 0; // 当前状态，0为初始化，1为播放，2为暂停
     int currentProgress = 0; //当前播放进度
 
+    NotificationManager manger;
+    RemoteViews remoteViews;
+
     @Override
     public IBinder onBind(Intent intent) {
         return new ServiceBinder();
@@ -43,6 +49,7 @@ public class MusicService extends Service {
         super.onCreate();
         // 服务创建的时候新建播放器
         mediaPlayer = new MediaPlayer();
+        manger = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
 
     public class ServiceBinder extends Binder implements IMusicService {
@@ -112,6 +119,7 @@ public class MusicService extends Service {
         public boolean pause() {
             mediaPlayer.pause();
             playState = I.PlayState.IS_PAUSE;
+            initNotification();
             return true;
         }
 
@@ -120,6 +128,7 @@ public class MusicService extends Service {
         public void start() {
             mediaPlayer.start();
             playState = I.PlayState.IS_PLAY;
+            initNotification();
         }
 
         //停止播放
@@ -127,6 +136,7 @@ public class MusicService extends Service {
         public void stop() {
             mediaPlayer.stop();
             playState = I.PlayState.IS_INIT;
+            initNotification();
         }
 
         //获取播放器对象
@@ -226,6 +236,7 @@ public class MusicService extends Service {
                     playNextMusic();
                 }
             });
+            initNotification();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -246,6 +257,55 @@ public class MusicService extends Service {
                 play(songs, new Random().nextInt(songs.size()) + 1);
                 break;
         }
+    }
+
+    private void initNotification() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setTicker("正在播放音乐");
+        builder.setSmallIcon(R.drawable.icon);
+        builder.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.notification_icon));
+        builder.setAutoCancel(false);
+        builder.setOngoing(true);
+        builder.setShowWhen(false);
+
+        Music music = songs.get(currentItem);
+
+        remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification);
+        remoteViews.setTextViewText(R.id.ntf_music, music.getTitle());
+        remoteViews.setTextViewText(R.id.ntf_singer, music.getSinger());
+
+        if (playState == I.PlayState.IS_PAUSE) {
+            remoteViews.setImageViewResource(R.id.ntf_play, R.drawable.play_button);
+        } else {
+            remoteViews.setImageViewResource(R.id.ntf_play, R.drawable.pause_button);
+        }
+
+        remoteViews.setOnClickPendingIntent(R.id.ntf_play, playOrPause());
+        remoteViews.setOnClickPendingIntent(R.id.ntf_front, getIntent(this, I.BroadCast.MUSIC_FRONT, 0, 0));
+        remoteViews.setOnClickPendingIntent(R.id.ntf_next, getIntent(this, I.BroadCast.MUSIC_NEXT, 0, 0));
+        remoteViews.setOnClickPendingIntent(R.id.ntf_cancel, getIntent(this, I.BroadCast.NOTIFY_CANCEL, 0, 0));
+
+        //点击跳转至播放界面
+        Intent notificationIntent = new Intent(this, PlayActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        builder.setCustomBigContentView(remoteViews);
+        Notification notification = builder.setContentIntent(pi).build();
+        manger.notify(I.Notification.NOTIFY_ID, notification);
+    }
+
+    private PendingIntent playOrPause() {
+        if (playState == I.PlayState.IS_PAUSE) {
+            return getIntent(this, I.BroadCast.MUSIC_PLAY, 0, 0);
+        } else {
+            return getIntent(this, I.BroadCast.MUSIC_PAUSE, 0, 0);
+        }
+    }
+
+    private PendingIntent getIntent(Context context, String action, int code, int flag) {
+        Intent intent = new Intent(action);
+        PendingIntent pi = PendingIntent.getBroadcast(context, code, intent, flag);
+        return pi;
     }
 
 }

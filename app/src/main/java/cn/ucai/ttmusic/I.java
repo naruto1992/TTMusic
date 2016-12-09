@@ -19,6 +19,7 @@ public interface I {
     }
 
     interface BroadCast {
+        String MUSIC_INIT = "play_init";
         String MUSIC_PLAY = "play_music";
         String MUSIC_FRONT = "play_front";
         String MUSIC_NEXT = "play_next";
@@ -31,6 +32,10 @@ public interface I {
 
     interface Intent {
         String MUSIC_SERVICE = "music_service";
+    }
+
+    interface Notification {
+        int NOTIFY_ID = 999;
     }
 
 }

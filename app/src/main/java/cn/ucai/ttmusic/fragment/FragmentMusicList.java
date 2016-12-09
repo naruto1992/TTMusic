@@ -73,7 +73,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
 
     @Override
     public void onHeaderClick() {
-        Intent intent = new Intent(I.BroadCast.MUSIC_PLAY);
+        Intent intent = new Intent(I.BroadCast.MUSIC_INIT);
         Bundle data = new Bundle();
         data.putSerializable(I.BroadCast.MUSIC_LIST, (Serializable) musicList);
         data.putInt(I.BroadCast.MUSIC_POSITION, 0);
@@ -83,7 +83,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
 
     @Override
     public void onItemClick(int position, Music music) {
-        Intent intent = new Intent(I.BroadCast.MUSIC_PLAY);
+        Intent intent = new Intent(I.BroadCast.MUSIC_INIT);
         Bundle data = new Bundle();
         data.putSerializable(I.BroadCast.MUSIC_LIST, (Serializable) musicList);
         data.putInt(I.BroadCast.MUSIC_POSITION, position);

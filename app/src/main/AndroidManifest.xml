@@ -19,6 +19,7 @@
             android:name=".receiver.MusciReceiver"
             android:exported="true">
             <intent-filter>
+                <action android:name="play_init" />
                 <action android:name="play_music" />
                 <action android:name="play_front" />
                 <action android:name="play_next" />
