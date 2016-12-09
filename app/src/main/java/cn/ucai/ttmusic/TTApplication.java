@@ -11,22 +11,16 @@ import cn.ucai.ttmusic.service.IMusicService;
 
 public class TTApplication extends Application {
 
-    Context appContext;
     static TTApplication application;
 
     IMusicService musicService;
     List<Music> musicList;
-    NotificationManager notManager;
 
     public static TTApplication getInstance() {
         if (application == null) {
             application = new TTApplication();
         }
         return application;
-    }
-
-    public Context getAppContext() {
-        return appContext;
     }
 
     public List<Music> getMusicList() {
@@ -45,17 +39,8 @@ public class TTApplication extends Application {
         this.musicService = musicService;
     }
 
-    public NotificationManager getNotManager() {
-        return notManager;
-    }
-
-    public void setNotManager(NotificationManager notManager) {
-        this.notManager = notManager;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
-        appContext = this;
     }
 }
