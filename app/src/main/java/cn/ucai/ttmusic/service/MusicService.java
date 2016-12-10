@@ -4,15 +4,18 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.media.session.MediaSessionCompat;
 import android.widget.RemoteViews;
 
 import java.io.Serializable;
@@ -267,32 +270,38 @@ public class MusicService extends Service {
         builder.setAutoCancel(false);
         builder.setOngoing(true);
         builder.setShowWhen(false);
-
         Music music = songs.get(currentItem);
+        if (Build.VERSION.SDK_INT >= 23) {
+            remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification_v23);
+            setIntent(remoteViews);
+            builder.setContent(remoteViews);
+        } else {
+            remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification);
+            remoteViews.setTextViewText(R.id.ntf_music, music.getTitle());
+            remoteViews.setTextViewText(R.id.ntf_singer, music.getSinger());
+            setIntent(remoteViews);
+            builder.setCustomBigContentView(remoteViews);
+        }
+        //点击跳转至播放界面
+        Intent notificationIntent = new Intent(this, PlayActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification);
-        remoteViews.setTextViewText(R.id.ntf_music, music.getTitle());
-        remoteViews.setTextViewText(R.id.ntf_singer, music.getSinger());
+        Notification notification = builder.setContentIntent(pi).build();
+//        notification.bigContentView = remoteViews;
 
+        manger.notify(I.Notification.NOTIFY_ID, notification);
+    }
+
+    private void setIntent(RemoteViews remoteViews){
         if (playState == I.PlayState.IS_PAUSE) {
             remoteViews.setImageViewResource(R.id.ntf_play, R.drawable.play_button);
         } else {
             remoteViews.setImageViewResource(R.id.ntf_play, R.drawable.pause_button);
         }
-
         remoteViews.setOnClickPendingIntent(R.id.ntf_play, playOrPause());
         remoteViews.setOnClickPendingIntent(R.id.ntf_front, getIntent(this, I.BroadCast.MUSIC_FRONT, 0, 0));
         remoteViews.setOnClickPendingIntent(R.id.ntf_next, getIntent(this, I.BroadCast.MUSIC_NEXT, 0, 0));
         remoteViews.setOnClickPendingIntent(R.id.ntf_cancel, getIntent(this, I.BroadCast.NOTIFY_CANCEL, 0, 0));
-
-        //点击跳转至播放界面
-        Intent notificationIntent = new Intent(this, PlayActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-
-        builder.setCustomBigContentView(remoteViews);
-        Notification notification = builder.setContentIntent(pi).build();
-
-        manger.notify(I.Notification.NOTIFY_ID, notification);
     }
 
     private PendingIntent playOrPause() {
