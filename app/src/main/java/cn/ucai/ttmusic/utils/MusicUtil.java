@@ -8,7 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 
 public class MusicUtil {
 
@@ -63,7 +63,7 @@ public class MusicUtil {
                         m.setTime(time);
                         m.setUrl(url);
                         m.setName(name);
-                        m.setFavorite(0);
+                        m.setCollect(0);
                         musicList.add(m);
                     }
                 } while (cursor.moveToNext());

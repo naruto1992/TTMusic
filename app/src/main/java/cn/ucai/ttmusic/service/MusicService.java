@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -12,13 +11,10 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.widget.RemoteViews;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Random;
 
@@ -27,7 +23,7 @@ import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.activity.PlayActivity;
 import cn.ucai.ttmusic.bean.LrcContent;
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 
 public class MusicService extends Service {
 

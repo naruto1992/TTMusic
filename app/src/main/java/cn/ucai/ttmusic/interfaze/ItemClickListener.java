@@ -2,7 +2,7 @@ package cn.ucai.ttmusic.interfaze;
 
 import java.util.List;
 
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 
 /**
  * Created by Administrator on 2016/12/2.

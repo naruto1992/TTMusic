@@ -193,6 +193,7 @@
     </LinearLayout>
 
     <ExpandableListView
+        android:id="@+id/list_collect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#e2e1e1" />

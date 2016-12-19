@@ -1,6 +1,7 @@
 package cn.ucai.ttmusic.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,8 +18,8 @@ import butterknife.OnClick;
 import cn.ucai.ttmusic.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.bean.Music;
-import cn.ucai.ttmusic.service.IMusicService;
+import cn.ucai.ttmusic.db.DBManager;
+import cn.ucai.ttmusic.db.Music;
 import cn.ucai.ttmusic.utils.TimeUtil;
 import cn.ucai.ttmusic.utils.ToastUtil;
 
@@ -49,6 +50,7 @@ public class PlayActivity extends BaseActivity {
 
     Music currentMusic;
     int[] modeIcons = new int[]{R.drawable.mode_normal, R.drawable.mode_single, R.drawable.mode_shuffle};
+    boolean isCollected; //当前歌曲是否被收藏
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +107,9 @@ public class PlayActivity extends BaseActivity {
                     playBtn.setImageResource(R.drawable.play_button);
                 }
 
+                isCollected = DBManager.isCollected(currentMusic.getSongId());
+                btnFavorite.setImageResource(isCollected ? R.drawable.favorite_selected_on : R.drawable.favorite_selected_off);
+
                 handler.sendEmptyMessageDelayed(I.Handler.PLAY_MUSIC, 500); //每半秒刷新一次
             }
         }
@@ -121,7 +126,14 @@ public class PlayActivity extends BaseActivity {
                 ToastUtil.show(mContext, "分享(开发中)");
                 break;
             case R.id.btn_favorite:
-                ToastUtil.show(mContext, "收藏(开发中)");
+                if (isCollected) {
+                    DBManager.cancelCollect(currentMusic.getSongId());
+                    ToastUtil.show(mContext, "取消收藏");
+                } else {
+                    DBManager.collectMusic(currentMusic);
+                    ToastUtil.show(mContext, "收藏成功");
+                }
+                mContext.sendBroadcast(new Intent(I.BroadCast.UPDATE_COLLECT));
                 break;
         }
     }

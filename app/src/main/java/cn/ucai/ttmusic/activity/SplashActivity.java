@@ -6,14 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 
 import java.util.List;
 
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 import cn.ucai.ttmusic.utils.MusicUtil;
 
 public class SplashActivity extends BaseActivity {

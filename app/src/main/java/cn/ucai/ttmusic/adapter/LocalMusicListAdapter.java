@@ -14,10 +14,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.ttmusic.R;
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 import cn.ucai.ttmusic.interfaze.ItemClickListener;
 
-public class MusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class LocalMusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     Context mContext;
     List<Music> musicList;
@@ -27,7 +27,7 @@ public class MusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     ItemClickListener listener;
 
-    public MusicListAdapter(Context context, List<Music> musicList) {
+    public LocalMusicListAdapter(Context context, List<Music> musicList) {
         this.mContext = context;
         this.musicList = musicList;
     }

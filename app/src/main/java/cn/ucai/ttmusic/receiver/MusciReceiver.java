@@ -10,7 +10,7 @@ import java.util.List;
 
 import cn.ucai.ttmusic.I;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 import cn.ucai.ttmusic.service.IMusicService;
 
 public class MusciReceiver extends BroadcastReceiver {

@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import cn.ucai.ttmusic.bean.LrcContent;
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 
 public interface IMusicService extends Serializable {
 

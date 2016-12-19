@@ -3,7 +3,6 @@ package cn.ucai.ttmusic.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +19,8 @@ import butterknife.ButterKnife;
 import cn.ucai.ttmusic.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.adapter.MusicListAdapter;
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.adapter.LocalMusicListAdapter;
+import cn.ucai.ttmusic.db.Music;
 import cn.ucai.ttmusic.interfaze.ItemClickListener;
 
 public class FragmentMusicList extends BaseFragment implements ItemClickListener {
@@ -32,7 +31,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
     RecyclerView local_music_rv;
 
     List<Music> musicList;
-    MusicListAdapter adapter;
+    LocalMusicListAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -54,7 +53,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
 
     @Override
     public void initView() {
-        adapter = new MusicListAdapter(mContext, musicList);
+        adapter = new LocalMusicListAdapter(mContext, musicList);
         adapter.setListener(this);
         local_music_rv.setAdapter(adapter);
         local_music_rv.setLayoutManager(new LinearLayoutManager(mContext));

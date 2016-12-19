@@ -1,17 +1,17 @@
 package cn.ucai.ttmusic;
 
 import android.app.Application;
-import android.app.NotificationManager;
 import android.content.Context;
 
 import java.util.List;
 
-import cn.ucai.ttmusic.bean.Music;
+import cn.ucai.ttmusic.db.Music;
 import cn.ucai.ttmusic.service.IMusicService;
 
 public class TTApplication extends Application {
 
     static TTApplication application;
+    static Context context;
 
     IMusicService musicService;
     List<Music> musicList;
@@ -21,6 +21,10 @@ public class TTApplication extends Application {
             application = new TTApplication();
         }
         return application;
+    }
+
+    public static Context getContext() {
+        return context;
     }
 
     public List<Music> getMusicList() {
@@ -42,5 +46,6 @@ public class TTApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        context = this;
     }
 }

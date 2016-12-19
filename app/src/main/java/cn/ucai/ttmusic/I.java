@@ -28,6 +28,8 @@ public interface I {
 
         String MUSIC_LIST = "musicList";
         String MUSIC_POSITION = "musicPosition";
+
+        String UPDATE_COLLECT = "update_collect";
     }
 
     interface Intent {
@@ -36,6 +38,11 @@ public interface I {
 
     interface Notification {
         int NOTIFY_ID = 999;
+    }
+
+    interface MyMusicList {
+        String CREATED_LIST = "创建的歌单";
+        String COLLECTD_LIST = "收藏的歌单";
     }
 
 }
