@@ -13,10 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <service android:name=".service.MusicService" />
+        <service android:name=".controller.service.MusicService" />
 
         <receiver
-            android:name=".receiver.MusciReceiver"
+            android:name=".controller.receiver.MusciReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="play_init" />
@@ -29,7 +29,7 @@
         </receiver>
 
         <activity
-            android:name=".activity.SplashActivity"
+            android:name=".controller.activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/full_screen_style">
             <intent-filter>
@@ -39,12 +39,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".controller.activity.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/full_screen_style" />
 
         <activity
-            android:name=".activity.PlayActivity"
+            android:name=".controller.activity.PlayActivity"
             android:screenOrientation="portrait"
             android:theme="@style/full_screen_style" />
     </application>

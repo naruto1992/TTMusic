@@ -22,7 +22,7 @@ android {
 
     greendao {
         schemaVersion 1
-        daoPackage 'cn.ucai.ttmusic.db'
+        daoPackage 'cn.ucai.ttmusic.model.db'
         targetGenDir 'src/main/java'
     }
 }

@@ -2,11 +2,7 @@ package cn.ucai.ttmusic.bean;
 
 import java.util.List;
 
-import cn.ucai.ttmusic.db.Music;
-
-/**
- * Created by Administrator on 2016/12/19.
- */
+import cn.ucai.ttmusic.model.db.Music;
 
 public class MusicListBean {
 
