@@ -15,9 +15,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.model.db.Music;
-import cn.ucai.ttmusic.controller.interfaze.ItemClickListener;
 
-public class LocalMusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class MusicAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     Context mContext;
     List<Music> musicList;
@@ -27,7 +26,7 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     ItemClickListener listener;
 
-    public LocalMusicListAdapter(Context context, List<Music> musicList) {
+    public MusicAdapter(Context context, List<Music> musicList) {
         this.mContext = context;
         this.musicList = musicList;
     }
@@ -93,9 +92,8 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
         @OnClick(R.id.layout_music_item)
         public void click(View v) {
             int position = (int) v.getTag();
-            Music music = musicList.get(position);
             if (listener != null) {
-                listener.onItemClick(position, music);
+                listener.onItemClick(position);
             }
         }
 
@@ -113,7 +111,7 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
         @OnClick(R.id.header_music_list)
         public void click(View v) {
             if (listener != null) {
-                listener.onHeaderClick();
+                listener.onItemClick(0);
             }
         }
 
@@ -121,6 +119,11 @@ public class LocalMusicListAdapter extends RecyclerView.Adapter<ViewHolder> {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface ItemClickListener {
+
+        void onItemClick(int position);
     }
 
 }

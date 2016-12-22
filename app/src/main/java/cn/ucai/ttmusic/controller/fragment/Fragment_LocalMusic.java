@@ -25,7 +25,7 @@ import cn.ucai.ttmusic.controller.activity.MainActivity;
 import cn.ucai.ttmusic.controller.adapter.MyPagerAdapter;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
 
-public class FragmentLocalMusic extends BaseFragment {
+public class Fragment_LocalMusic extends BaseFragment {
 
     Context mContext;
 
@@ -37,16 +37,16 @@ public class FragmentLocalMusic extends BaseFragment {
     ViewPager localMusicPager;
 
     List<Fragment> fragments;
-    FragmentMusicList musicList;
-    FragmentSingerList singerList;
-    FragmentAlbumList albumList;
-    FragmentFolderList folderList;
+    Fragment_MusicList musicList;
+    Fragment_SingerList singerList;
+    Fragment_AlbumList albumList;
+    Fragment_FolderList folderList;
 
     MainActivity mainActivity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.activity_local_music, container, false);
+        View layout = inflater.inflate(R.layout.fragment_local_music, container, false);
         ButterKnife.bind(this, layout);
         return layout;
     }
@@ -89,10 +89,10 @@ public class FragmentLocalMusic extends BaseFragment {
         tabs.addTab(tabs.newTab().setText(titles.get(3)));
 
         fragments = new ArrayList<>();
-        musicList = new FragmentMusicList();
-        singerList = new FragmentSingerList();
-        albumList = new FragmentAlbumList();
-        folderList = new FragmentFolderList();
+        musicList = new Fragment_MusicList();
+        singerList = new Fragment_SingerList();
+        albumList = new Fragment_AlbumList();
+        folderList = new Fragment_FolderList();
         fragments.add(musicList);
         fragments.add(singerList);
         fragments.add(albumList);

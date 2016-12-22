@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 
 import cn.ucai.ttmusic.R;
 
-public class FragmentFolderList extends BaseFragment {
+public class Fragment_SingerList extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.fragment_folder_list, container, false);
+        View layout = inflater.inflate(R.layout.fragment_singer_list, container, false);
         return layout;
     }
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/coordinator_layout"
     style="@style/style_wallpaper"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,7 +11,7 @@
         android:layout_height="@dimen/status_bar_height" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/local_music_toolbar"
+        android:id="@+id/favorites_music_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@android:color/transparent"
@@ -20,16 +19,15 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/local_music_tabs"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="@color/white" />
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/local_music_pager"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/fragment_bg" />
+        android:background="@color/fragment_bg">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/favorites_music_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
 </LinearLayout>

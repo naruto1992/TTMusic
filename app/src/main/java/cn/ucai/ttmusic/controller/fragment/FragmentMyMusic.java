@@ -23,12 +23,14 @@ import cn.ucai.ttmusic.bean.MusicListBean;
 import cn.ucai.ttmusic.controller.activity.MainActivity;
 import cn.ucai.ttmusic.controller.adapter.MusicListAdapter;
 import cn.ucai.ttmusic.model.I;
+import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.music.MusicListModel;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
 
 public class FragmentMyMusic extends BaseFragment {
 
     Context mContext;
+    LocalBroadcastManager broadcastManager;
     BroadcastReceiver mReceiver;
 
     @BindView(R.id.count_local_music)
@@ -41,14 +43,15 @@ public class FragmentMyMusic extends BaseFragment {
     TextView countSingers; //歌手数量
     @BindView(R.id.count_mvs)
     TextView countMvs; //MV数量
+    @BindView(R.id.favorite_count)
+    TextView favorite_count; //收藏数量
     @BindView(R.id.myMusicList)
     ListView myMusicList;
 
     MusicListModel musicListModel;
+    List<Music> favorites;
     List<MusicListBean> musicList;
     MusicListAdapter adapter;
-
-    LocalBroadcastManager broadcastManager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,14 +64,19 @@ public class FragmentMyMusic extends BaseFragment {
     public void initUi() {
         mContext = getActivity();
         broadcastManager = LocalBroadcastManager.getInstance(TTApplication.getContext());
-
+        //设置本地音乐数量
         countLocalMusic.setText("(" + TTApplication.getInstance().getMusicList().size() + ")");
         musicListModel = new MusicListModel();
         loadMusicList();
+        //初始化广播
         initBroadCast();
     }
 
     private void loadMusicList() {
+        //设置我的收藏数量
+        favorites = musicListModel.getFavorites();
+        favorite_count.setText(favorites.size() + "首");
+        //加载我的歌单数据
         musicList = musicListModel.getMusicList();
         adapter = new MusicListAdapter(mContext, musicList);
         myMusicList.setAdapter(adapter);
@@ -91,12 +99,12 @@ public class FragmentMyMusic extends BaseFragment {
     }
 
 
-    @OnClick({R.id.list_localMusic, R.id.list_recents, R.id.list_downloads, R.id.list_my_singers, R.id.list_my_mv})
+    @OnClick({R.id.list_localMusic, R.id.list_recents, R.id.list_downloads, R.id.list_my_singers, R.id.list_my_mv, R.id.list_favorites})
     public void onClick(View view) {
         MainActivity mainActivity = (MainActivity) getActivity();
         switch (view.getId()) {
             case R.id.list_localMusic:
-                mainActivity.goToFragment(new FragmentLocalMusic());
+                mainActivity.goToFragment(new Fragment_LocalMusic());
                 break;
             case R.id.list_recents:
                 ToastUtil.show(mContext, "最近播放(开发中)");
@@ -109,6 +117,13 @@ public class FragmentMyMusic extends BaseFragment {
                 break;
             case R.id.list_my_mv:
                 ToastUtil.show(mContext, "我的MV(开发中)");
+                break;
+            case R.id.list_favorites:
+                if (favorites == null || favorites.size() == 0) {
+                    ToastUtil.show(mContext, "该歌单不含歌曲，请添加几首歌曲吧o(∩_∩)o");
+                    return;
+                }
+                mainActivity.goToFragment(new Fragment_Favorites());
                 break;
         }
     }

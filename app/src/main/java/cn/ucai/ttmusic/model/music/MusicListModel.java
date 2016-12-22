@@ -15,10 +15,13 @@ public class MusicListModel {
 
     public static List<MusicListBean> getMusicList() {
         List<MusicListBean> musicList = new ArrayList<>();
-        MusicListBean favorites = new MusicListBean();
-        favorites.setList_title("我喜欢的音乐");
-        favorites.setMusicList(getFavorites());
-        musicList.add(favorites);
+        List<String> titles = DBManager.getListNameList();
+        for (int i = 0; i < titles.size(); i++) {
+            MusicListBean bean = new MusicListBean();
+            String title = titles.get(i);
+            bean.setList_title(title);
+            bean.setMusicList(DBManager.getMusicList(title));
+        }
         return musicList;
     }
 

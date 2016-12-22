@@ -274,6 +274,56 @@
         android:layout_height="1px"
         android:background="@color/border_color" />
 
+    <RelativeLayout
+        android:id="@+id/list_favorites"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/list_item_bg"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp">
+
+        <ImageView
+            android:id="@+id/favorite_cover"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/favorite_selected_on" />
+
+        <TextView
+            android:id="@+id/favorite_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_toRightOf="@id/favorite_cover"
+            android:text="我喜欢的音乐"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/favorite_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/favorite_title"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:text="0首" />
+
+
+        <ImageView
+            android:id="@+id/favorite_menu"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_item_menu" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/border_color" />
+
     <ListView
         android:id="@+id/myMusicList"
         android:layout_width="match_parent"

@@ -19,11 +19,10 @@ import butterknife.ButterKnife;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.controller.adapter.LocalMusicListAdapter;
+import cn.ucai.ttmusic.controller.adapter.MusicAdapter;
 import cn.ucai.ttmusic.model.db.Music;
-import cn.ucai.ttmusic.controller.interfaze.ItemClickListener;
 
-public class FragmentMusicList extends BaseFragment implements ItemClickListener {
+public class Fragment_MusicList extends BaseFragment implements MusicAdapter.ItemClickListener {
 
     Context mContext;
 
@@ -31,7 +30,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
     RecyclerView local_music_rv;
 
     List<Music> musicList;
-    LocalMusicListAdapter adapter;
+    MusicAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,7 +48,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
     @Override
     public void initUi() {
         musicList = TTApplication.getInstance().getMusicList();
-        adapter = new LocalMusicListAdapter(mContext, musicList);
+        adapter = new MusicAdapter(mContext, musicList);
         adapter.setListener(this);
         local_music_rv.setAdapter(adapter);
         local_music_rv.setLayoutManager(new LinearLayoutManager(mContext));
@@ -57,22 +56,7 @@ public class FragmentMusicList extends BaseFragment implements ItemClickListener
     }
 
     @Override
-    public List<Music> getCurrentMusicList() {
-        return musicList;
-    }
-
-    @Override
-    public void onHeaderClick() {
-        Intent intent = new Intent(I.BroadCast.MUSIC_INIT);
-        Bundle data = new Bundle();
-        data.putSerializable(I.BroadCast.MUSIC_LIST, (Serializable) musicList);
-        data.putInt(I.BroadCast.MUSIC_POSITION, 0);
-        intent.putExtras(data);
-        mContext.sendBroadcast(intent);
-    }
-
-    @Override
-    public void onItemClick(int position, Music music) {
+    public void onItemClick(int position) {
         Intent intent = new Intent(I.BroadCast.MUSIC_INIT);
         Bundle data = new Bundle();
         data.putSerializable(I.BroadCast.MUSIC_LIST, (Serializable) musicList);
