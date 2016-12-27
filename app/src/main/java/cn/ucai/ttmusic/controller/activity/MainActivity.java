@@ -182,7 +182,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 }
                 break;
             case R.id.ivSearch:
-                ToastUtil.show(mContext, "搜索(开发中)");
+                ToastUtil.show(mContext, "搜索(暂不支持)");
                 break;
             case R.id.musicControlPanel:
                 if (musicService == null || currentMusic == null) {

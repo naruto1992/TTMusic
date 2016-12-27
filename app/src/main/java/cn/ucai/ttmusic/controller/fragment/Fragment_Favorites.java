@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 
 import java.io.Serializable;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,6 +28,7 @@ import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.controller.activity.MainActivity;
+import cn.ucai.ttmusic.controller.activity.SearchActivity;
 import cn.ucai.ttmusic.controller.adapter.MusicAdapter;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.DBManager;
@@ -147,7 +147,12 @@ public class Fragment_Favorites extends BaseFragment implements MusicAdapter.Ite
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
-                ToastUtil.show(mContext, "搜索(开发中)");
+                Intent intent = new Intent(mContext, SearchActivity.class);
+                Bundle data = new Bundle();
+                data.putInt(I.Intent.SEARCH_TYPE, I.SearchType.MUSIC_LIST);
+                data.putSerializable(I.Intent.SEARCH_DATA, (Serializable) favorites);
+                intent.putExtras(data);
+                startActivity(intent);
                 break;
             case R.id.menu_action1:
                 ToastUtil.show(mContext, "功能1(开发中)");

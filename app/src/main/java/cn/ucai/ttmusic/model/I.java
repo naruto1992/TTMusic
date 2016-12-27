@@ -34,10 +34,18 @@ public interface I {
 
     interface Intent {
         String MUSIC_SERVICE = "music_service";
+
+        String SEARCH_TYPE = "search_type";
+        String SEARCH_DATA = "search_data";
     }
 
     interface Notification {
         int NOTIFY_ID = 999;
+    }
+
+    interface SearchType {
+        int MUSIC_LOCAL = 111; //搜索本地音乐
+        int MUSIC_LIST = 222;  //搜索歌单音乐
     }
 
 }

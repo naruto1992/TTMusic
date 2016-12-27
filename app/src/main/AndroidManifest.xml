@@ -12,7 +12,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <service android:name=".controller.service.MusicService" />
 
         <receiver
@@ -45,6 +44,11 @@
 
         <activity
             android:name=".controller.activity.PlayActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/full_screen_style" />
+
+        <activity
+            android:name=".controller.activity.SearchActivity"
             android:screenOrientation="portrait"
             android:theme="@style/full_screen_style" />
     </application>
