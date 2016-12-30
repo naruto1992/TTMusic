@@ -11,10 +11,8 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.Serializable;
@@ -24,13 +22,14 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
+import cn.ucai.ttmusic.controller.adapter.ItemClickListener;
 import cn.ucai.ttmusic.controller.adapter.MusicAdapter;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.utils.InputUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
 
-public class SearchActivity extends BaseActivity implements MusicAdapter.ItemClickListener {
+public class SearchActivity extends BaseActivity implements ItemClickListener {
 
     Context mContext;
     @BindView(R.id.search_music_toolbar)

@@ -16,11 +16,6 @@ public class Fragment_AlbumList extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void initUi() {
 
     }

@@ -16,11 +16,6 @@ public class FragmentFriendsMusic extends BaseFragment {
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
-    @Override
     public void initUi() {
 
     }

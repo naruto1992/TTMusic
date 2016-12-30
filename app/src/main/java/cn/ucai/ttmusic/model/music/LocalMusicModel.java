@@ -8,9 +8,21 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import cn.ucai.ttmusic.bean.Singer;
 import cn.ucai.ttmusic.model.db.Music;
 
 public class LocalMusicModel {
+
+    private static String[] projections = {
+            MediaStore.Audio.Media._ID,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.SIZE,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.DISPLAY_NAME,
+            MediaStore.Audio.Media.TITLE
+    };
 
     public static List<Music> getMusicData(Context context) {
         // 创建一个Music的对象集合
@@ -19,7 +31,7 @@ public class LocalMusicModel {
         ContentResolver cr = context.getContentResolver();
         if (cr != null) {
             // 获取手机里的所有歌曲
-            Cursor cursor = cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+            Cursor cursor = cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projections, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
             if (null == cursor) {
                 return null;
             }
@@ -70,5 +82,57 @@ public class LocalMusicModel {
             }
         }
         return musicList;
+    }
+
+    private static String GET_SINGERS[] = {
+            MediaStore.Audio.Media.DISPLAY_NAME,
+            MediaStore.Audio.Media.ARTIST,
+            "COUNT(artist)"
+    };
+    private static String selection = "0=0) group by (artist";
+
+    public static List<Singer> getSingerList(Context context) {
+        List<Singer> singers = new ArrayList<>();
+        ContentResolver cr = context.getContentResolver();
+        if (cr != null) {
+            Cursor cursor = cr.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, GET_SINGERS, selection, null, MediaStore.Audio.Media.ARTIST_KEY);
+            if (null == cursor) {
+                return null;
+            }
+            if (cursor.moveToFirst()) {
+                do {
+                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    // 获取歌曲文件格式后缀׺
+                    String sbr = name.substring(name.lastIndexOf(".") + 1);
+                    //如果为mp3歌曲文件
+                    if (sbr.equals("mp3")) {
+                        Singer singer = new Singer();
+                        //设置名字
+                        String singerName = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+                        // 如果为<unknown>则显示为未知
+                        if ("<unknown>".equals(singerName)) {
+                            singerName = "未知";
+                        }
+                        singer.setSingerName(singerName);
+                        //设置数量
+                        int count = cursor.getInt(cursor.getColumnIndex("COUNT(artist)"));
+                        singer.setMusicCount(count);
+
+                        singers.add(singer);
+                    }
+                } while (cursor.moveToNext());
+            }
+        }
+        return singers;
+    }
+
+    public static List<Music> getMusicListBySinger(List<Music> all, String singerName) {
+        List<Music> list = new ArrayList<>();
+        for (Music music : all) {
+            if (music.getSinger().equalsIgnoreCase(singerName)) {
+                list.add(music);
+            }
+        }
+        return list;
     }
 }

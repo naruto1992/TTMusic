@@ -121,9 +121,4 @@ public class MusicAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    public interface ItemClickListener {
-
-        void onItemClick(int position);
-    }
-
 }

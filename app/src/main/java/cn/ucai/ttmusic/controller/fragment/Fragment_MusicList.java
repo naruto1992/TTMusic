@@ -16,13 +16,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
+import cn.ucai.ttmusic.controller.adapter.ItemClickListener;
 import cn.ucai.ttmusic.controller.adapter.MusicAdapter;
+import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.Music;
 
-public class Fragment_MusicList extends BaseFragment implements MusicAdapter.ItemClickListener {
+public class Fragment_MusicList extends BaseFragment implements ItemClickListener {
 
     Context mContext;
 
@@ -38,11 +39,6 @@ public class Fragment_MusicList extends BaseFragment implements MusicAdapter.Ite
         ButterKnife.bind(this, layout);
         mContext = getContext();
         return layout;
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override

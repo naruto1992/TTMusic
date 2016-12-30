@@ -29,13 +29,14 @@ import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.controller.activity.MainActivity;
 import cn.ucai.ttmusic.controller.activity.SearchActivity;
+import cn.ucai.ttmusic.controller.adapter.ItemClickListener;
 import cn.ucai.ttmusic.controller.adapter.MusicAdapter;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
 
-public class Fragment_Favorites extends BaseFragment implements MusicAdapter.ItemClickListener {
+public class Fragment_Favorites extends BaseFragment implements ItemClickListener {
 
     Context mContext;
     MainActivity mainActivity;
