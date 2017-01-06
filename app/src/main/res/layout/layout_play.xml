@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_play">
@@ -176,11 +177,18 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/play_pager"
+    <me.wcy.lrcview.LrcView
+        android:id="@+id/play_lrc"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/play_bottom"
-        android:layout_below="@id/play_top" />
+        android:layout_below="@id/play_top"
+        app:lrcAnimationDuration="1000"
+        app:lrcCurrentTextColor="@color/lrc_cureent"
+        app:lrcDividerHeight="24dp"
+        app:lrcLabel="找不到歌词(&gt;_&lt;)"
+        app:lrcNormalTextColor="@color/white"
+        app:lrcPadding="16dp"
+        app:lrcTextSize="16sp" />
 
 </RelativeLayout>

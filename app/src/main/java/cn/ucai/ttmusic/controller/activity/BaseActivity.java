@@ -1,11 +1,9 @@
 package cn.ucai.ttmusic.controller.activity;
 
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 
-import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.controller.service.IMusicService;
+import cn.ucai.ttmusic.controller.interfaze.IMusicService;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

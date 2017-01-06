@@ -11,7 +11,7 @@ import java.util.List;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.model.db.Music;
-import cn.ucai.ttmusic.controller.service.IMusicService;
+import cn.ucai.ttmusic.controller.interfaze.IMusicService;
 
 public class MusciReceiver extends BroadcastReceiver {
 

@@ -2,12 +2,11 @@ package cn.ucai.ttmusic;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.v4.content.LocalBroadcastManager;
 
 import java.util.List;
 
 import cn.ucai.ttmusic.model.db.Music;
-import cn.ucai.ttmusic.controller.service.IMusicService;
+import cn.ucai.ttmusic.controller.interfaze.IMusicService;
 
 public class TTApplication extends Application {
 

@@ -6,23 +6,25 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.io.File;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
+import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.utils.TimeUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
+import me.wcy.lrcview.LrcView;
 
 public class PlayActivity extends BaseActivity {
 
@@ -46,8 +48,8 @@ public class PlayActivity extends BaseActivity {
     ImageView playBtn; //播放按钮
     @BindView(R.id.btn_favorite)
     ImageView btnFavorite; //收藏按钮
-    @BindView(R.id.play_pager)
-    ViewPager playPager; //歌曲切换
+    @BindView(R.id.play_lrc)
+    LrcView lrcView; //歌词
 
     Music currentMusic;
     int[] modeIcons = new int[]{R.drawable.mode_normal, R.drawable.mode_single, R.drawable.mode_shuffle};
@@ -88,8 +90,11 @@ public class PlayActivity extends BaseActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 playStartTime.setText(TimeUtil.toTime(seekBar.getProgress()));
                 musicService.moveToProgress(seekBar.getProgress());
+                lrcView.onDrag(seekBar.getProgress());
             }
         });
+        //加载歌词
+        showLrc(musicService.getCurrentMusic());
     }
 
     private Handler handler = new Handler() {
@@ -111,13 +116,15 @@ public class PlayActivity extends BaseActivity {
                 } else {
                     playBtn.setImageResource(R.drawable.play_button);
                 }
-
                 if (check) {
                     isCollected = DBManager.isCollected(currentMusic.getSongId());
                     btnFavorite.setImageResource(isCollected ? R.drawable.favorite_selected_on : R.drawable.favorite_selected_off);
                     check = false;
                 }
                 handler.sendEmptyMessageDelayed(I.Handler.PLAY_MUSIC, 500); //每半秒刷新一次
+            }
+            if (msg.what == I.Handler.SHOW_LRC) {
+                showLrc(musicService.getCurrentMusic());
             }
         }
     };
@@ -154,18 +161,22 @@ public class PlayActivity extends BaseActivity {
             case R.id.play_pre_btn:
                 musicService.frontMusic();
                 check = true;
+                handler.sendEmptyMessage(I.Handler.SHOW_LRC);
                 break;
             case R.id.play_btn:
                 if (musicService.isPlay()) {
                     musicService.setCurrentTime(musicService.getCurrentTime());
                     musicService.pause();
+                    handler.removeCallbacks(playLrcs);
                 } else {
                     musicService.start();
+                    handler.post(playLrcs);
                 }
                 break;
             case R.id.play_next_btn:
                 musicService.nextMusic();
                 check = true;
+                handler.sendEmptyMessage(I.Handler.SHOW_LRC);
                 break;
         }
         handler.sendEmptyMessage(I.Handler.PLAY_MUSIC); //立即生效
@@ -188,8 +199,36 @@ public class PlayActivity extends BaseActivity {
         handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);//立即生效
     }
 
+    Runnable playLrcs = new Runnable() {
+        @Override
+        public void run() {
+            if (musicService.isPlay()) {
+                long time = musicService.getCurrentTime();
+                lrcView.updateTime(time);
+            }
+            handler.postDelayed(this, 100);
+        }
+    };
+
+    public void showLrc(Music music) {
+        // 读取同文件夹下的歌词文件
+        File f = new File(music.getUrl().replace(".mp3", ".lrc"));
+        try {
+            lrcView.loadLrc(f);
+            handler.post(playLrcs);
+        } catch (Exception e) {
+            lrcView.setLabel("找不到歌词(&gt;_&lt;)");
+        }
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacks(playLrcs);
+        super.onDestroy();
     }
 }

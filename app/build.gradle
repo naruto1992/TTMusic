@@ -39,5 +39,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'org.greenrobot:greendao:3.2.0'
     compile 'org.greenrobot:greendao-generator:3.2.0'
+    compile 'me.wcy:lrcview:1.4.0'
     testCompile 'junit:junit:4.12'
 }

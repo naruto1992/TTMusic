@@ -33,7 +33,7 @@ import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.controller.fragment.FragmentFriendsMusic;
 import cn.ucai.ttmusic.controller.fragment.FragmentMyMusic;
 import cn.ucai.ttmusic.controller.fragment.FragmentNetMusic;
-import cn.ucai.ttmusic.controller.service.IMusicService;
+import cn.ucai.ttmusic.controller.interfaze.IMusicService;
 import cn.ucai.ttmusic.controller.service.MusicService;
 import cn.ucai.ttmusic.model.utils.ExitUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;

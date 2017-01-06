@@ -11,4 +11,5 @@
     <color name="half_transparent">#3f000000</color>
     <color name="border_color">#333233</color>
     <color name="fragment_bg">#f9f7f7</color>
+    <color name="lrc_cureent">#FFFBF81D</color>
 </resources>

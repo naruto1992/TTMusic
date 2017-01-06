@@ -16,6 +16,7 @@ public interface I {
 
     interface Handler {
         int PLAY_MUSIC = 0X000;
+        int SHOW_LRC = 0x111;
     }
 
     interface BroadCast {

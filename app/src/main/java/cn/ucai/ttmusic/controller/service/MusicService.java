@@ -18,11 +18,11 @@ import android.widget.RemoteViews;
 import java.util.List;
 import java.util.Random;
 
-import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.controller.activity.PlayActivity;
-import cn.ucai.ttmusic.bean.LrcContent;
+import cn.ucai.ttmusic.controller.interfaze.IMusicService;
+import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.Music;
 
 public class MusicService extends Service {
@@ -197,20 +197,6 @@ public class MusicService extends Service {
             return playMode;
         }
 
-        @Override
-        public List<LrcContent> getLrc() {
-            return null;
-        }
-
-        @Override
-        public void showLrc(int position) {
-        }
-
-        @Override
-        public int getLrcIndex() {
-            return 0;
-        }
-
     }
 
     private void play(List<Music> musicList, int position) {
@@ -288,7 +274,7 @@ public class MusicService extends Service {
         manger.notify(I.Notification.NOTIFY_ID, notification);
     }
 
-    private void setIntent(RemoteViews remoteViews){
+    private void setIntent(RemoteViews remoteViews) {
         if (playState == I.PlayState.IS_PAUSE) {
             remoteViews.setImageViewResource(R.id.ntf_play, R.drawable.play_button);
         } else {

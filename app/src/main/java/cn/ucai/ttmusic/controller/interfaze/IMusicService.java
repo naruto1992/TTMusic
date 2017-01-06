@@ -1,11 +1,10 @@
-package cn.ucai.ttmusic.controller.service;
+package cn.ucai.ttmusic.controller.interfaze;
 
 import android.media.MediaPlayer;
 
 import java.io.Serializable;
 import java.util.List;
 
-import cn.ucai.ttmusic.bean.LrcContent;
 import cn.ucai.ttmusic.model.db.Music;
 
 public interface IMusicService extends Serializable {
@@ -39,9 +38,6 @@ public interface IMusicService extends Serializable {
     // 停止
     void stop();
 
-    // 显示相应歌词
-    void showLrc(int position);
-
     // 获得播放对象
     MediaPlayer getMediaPlayer();
 
@@ -74,11 +70,5 @@ public interface IMusicService extends Serializable {
 
     // 获取当前播放模式
     int getPlayMode();
-
-    // 获取歌词对象
-    List<LrcContent> getLrc();
-
-    // 获取当前歌词进度值
-    int getLrcIndex();
 
 }
