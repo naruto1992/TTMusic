@@ -37,9 +37,6 @@ public class MusciReceiver extends BroadcastReceiver {
                     }
                     int position = data.getInt(I.BroadCast.MUSIC_POSITION, 0);
                     musicService.setCurrentItemId(position);
-//                    if (musicService.isPlay()) {
-//                        musicService.pause();
-//                    }
                     musicService.playMusic(position);
                     break;
                 //播放

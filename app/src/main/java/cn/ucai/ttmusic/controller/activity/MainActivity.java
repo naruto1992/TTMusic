@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -320,6 +321,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 //            musicService.moveToProgress(0);
             //很重要!!!
             TTApplication.getInstance().setMusicService(musicService);
+            MediaPlayer mediaPlayer = musicService.getMediaPlayer();
+            // 设置播放完毕监听
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                public void onCompletion(MediaPlayer mp) {
+                    // 如果播放完毕就直接下一曲
+                    musicService.nextMusic();
+                }
+            });
             //启动handler
             handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
         }

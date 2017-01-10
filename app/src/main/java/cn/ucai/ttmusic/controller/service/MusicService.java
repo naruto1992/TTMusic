@@ -212,15 +212,6 @@ public class MusicService extends Service {
             // 设置为正在播放
             playState = 1;
             currentItem = position;
-            // 显示歌词
-            // showLrcs(position);
-            // 设置播放完毕监听器
-            mediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-                public void onCompletion(MediaPlayer mp) {
-                    // 如果播放完毕就直接下一曲
-                    playNextMusic();
-                }
-            });
             initNotification();
         } catch (Exception e) {
             e.printStackTrace();
@@ -253,17 +244,17 @@ public class MusicService extends Service {
         builder.setOngoing(true);
         builder.setShowWhen(false);
         Music music = songs.get(currentItem);
-        if (Build.VERSION.SDK_INT >= 23) {
-            remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification_v23);
-            setIntent(remoteViews);
-            builder.setContent(remoteViews);
-        } else {
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification_v23);
+//            setIntent(remoteViews);
+//            builder.setContent(remoteViews);
+//        } else {
             remoteViews = new RemoteViews(getPackageName(), R.layout.layout_notification);
             remoteViews.setTextViewText(R.id.ntf_music, music.getTitle());
             remoteViews.setTextViewText(R.id.ntf_singer, music.getSinger());
             setIntent(remoteViews);
             builder.setCustomBigContentView(remoteViews);
-        }
+//        }
         //点击跳转至播放界面
         Intent notificationIntent = new Intent(this, PlayActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, notificationIntent, 0);

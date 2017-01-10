@@ -2,6 +2,7 @@ package cn.ucai.ttmusic.controller.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -56,6 +57,7 @@ public class PlayActivity extends BaseActivity {
     boolean check = true; //是否需要检测是否被收藏
     boolean isCollected; //当前歌曲是否被收藏
 
+    MediaPlayer mediaPlayer; // 音乐播放对象
     LocalBroadcastManager broadcastManager;
 
     @Override
@@ -63,7 +65,6 @@ public class PlayActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
         ButterKnife.bind(this);
-
         // 保持屏幕唤醒
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         mContext = this;
@@ -91,6 +92,15 @@ public class PlayActivity extends BaseActivity {
                 playStartTime.setText(TimeUtil.toTime(seekBar.getProgress()));
                 musicService.moveToProgress(seekBar.getProgress());
                 lrcView.onDrag(seekBar.getProgress());
+            }
+        });
+        mediaPlayer = musicService.getMediaPlayer();
+        // 设置播放完毕监听
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            public void onCompletion(MediaPlayer mp) {
+                // 如果播放完毕就直接下一曲
+                musicService.nextMusic();
+                showLrc(musicService.getCurrentMusic());
             }
         });
         //加载歌词
