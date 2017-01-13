@@ -1,10 +1,14 @@
 package cn.ucai.ttmusic.controller.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +24,7 @@ import cn.ucai.ttmusic.controller.interfaze.IMusicService;
 import cn.ucai.ttmusic.controller.interfaze.IPlayView;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.Music;
+import cn.ucai.ttmusic.model.utils.ToastUtil;
 import cn.ucai.ttmusic.view.DiscoView;
 
 public class PlayViewFragment extends Fragment implements IPlayView {
@@ -29,12 +34,13 @@ public class PlayViewFragment extends Fragment implements IPlayView {
     Animation needlePlay, needlePause;
 
     @BindView(R.id.play_discoview)
-    DiscoView playDiscoview;
+    public DiscoView playDiscoview;
     @BindView(R.id.play_needle)
-    ImageView playNeedle;
+    public ImageView playNeedle;
+
+    boolean isRotating = false;
 
     IMusicService musicService; //当前播放服务
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,7 +58,7 @@ public class PlayViewFragment extends Fragment implements IPlayView {
     }
 
     private void initView() {
-        currentMusic = (Music) getArguments().getSerializable(I.Intent.MUSIC);
+        currentMusic = (Music) getArguments().getSerializable(I.Intent.CURRENT_MUSIC);
         if (currentMusic == null || musicService == null) {
             return;
         }
@@ -70,16 +76,27 @@ public class PlayViewFragment extends Fragment implements IPlayView {
     @Override
     public void startRotate() {
         playDiscoview.start();
+        playNeedle.startAnimation(needlePause);
+        playNeedle.startAnimation(needlePlay);
+        isRotating = true;
     }
 
     @Override
     public void pauseRotate() {
         playDiscoview.pause();
+        playNeedle.startAnimation(needlePause);
+        isRotating = false;
     }
 
     @Override
     public void reStartRotate() {
         playDiscoview.reStart();
+        playNeedle.startAnimation(needlePlay);
+        isRotating = true;
+    }
+
+    public boolean isRotating() {
+        return isRotating;
     }
 
     @Override

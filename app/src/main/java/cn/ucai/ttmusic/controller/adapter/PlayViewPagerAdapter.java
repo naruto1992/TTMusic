@@ -1,38 +1,39 @@
 package cn.ucai.ttmusic.controller.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.view.ViewGroup;
 
 import java.util.List;
 
 import cn.ucai.ttmusic.controller.fragment.PlayViewFragment;
-import cn.ucai.ttmusic.model.I;
-import cn.ucai.ttmusic.model.db.Music;
 
 
 public class PlayViewPagerAdapter extends FragmentPagerAdapter {
 
-    List<Music> musicList;
+    List<PlayViewFragment> fragments;
+    public PlayViewFragment currentFragment;
 
-    public PlayViewPagerAdapter(FragmentManager fm, List<Music> musicList) {
+    public PlayViewPagerAdapter(FragmentManager fm, List<PlayViewFragment> fragments) {
         super(fm);
-        this.musicList = musicList;
+        this.fragments = fragments;
     }
 
     @Override
     public int getCount() {
-        return musicList == null ? 0 : musicList.size();
+        return fragments == null ? 0 : fragments.size();
+    }
+
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        this.currentFragment = (PlayViewFragment) object;
+        super.setPrimaryItem(container, position, object);
     }
 
     @Override
     public Fragment getItem(int position) {
-        Music music = musicList.get(position);
-        PlayViewFragment fragment = new PlayViewFragment();
-        Bundle data = new Bundle();
-        data.putSerializable(I.Intent.MUSIC, music);
-        fragment.setArguments(data);
-        return fragment;
+        return fragments.get(position);
     }
+
 }

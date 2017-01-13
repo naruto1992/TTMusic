@@ -42,7 +42,7 @@ public interface I {
 
     interface Intent {
         String MUSIC_SERVICE = "music_service";
-        String MUSIC = "music";
+        String CURRENT_MUSIC = "current_music";
 
         String SEARCH_TYPE = "search_type";
         String SEARCH_DATA = "search_data";
