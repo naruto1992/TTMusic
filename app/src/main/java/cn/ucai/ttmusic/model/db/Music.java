@@ -28,6 +28,8 @@ public class Music implements Serializable {
     private String singer;// 歌手
     @Property(nameInDb = "SONG_ALBUM")
     private String album;//专辑
+    @Property(nameInDb = "SONG_ALBUM_ID")
+    private int albumId; //专辑id
     @Property(nameInDb = "SONG_URL")
     private String url;// 获得歌曲完整路径
     @Property(nameInDb = "SONG_SIZE")
@@ -45,15 +47,16 @@ public class Music implements Serializable {
     @Property(nameInDb = "ADD_TIME")
     private long addTime;
 
-    @Generated(hash = 31623025)
+    @Generated(hash = 1087602040)
     public Music(Long id, int songId, String title, String singer, String album,
-                 String url, long size, long time, String name, int isCollected,
-                 long collectTime, String listName, long addTime) {
+                 int albumId, String url, long size, long time, String name,
+                 int isCollected, long collectTime, String listName, long addTime) {
         this.id = id;
         this.songId = songId;
         this.title = title;
         this.singer = singer;
         this.album = album;
+        this.albumId = albumId;
         this.url = url;
         this.size = size;
         this.time = time;
@@ -69,7 +72,7 @@ public class Music implements Serializable {
     }
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(Long id) {
@@ -77,7 +80,7 @@ public class Music implements Serializable {
     }
 
     public int getSongId() {
-        return songId;
+        return this.songId;
     }
 
     public void setSongId(int songId) {
@@ -85,7 +88,7 @@ public class Music implements Serializable {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -93,7 +96,7 @@ public class Music implements Serializable {
     }
 
     public String getSinger() {
-        return singer;
+        return this.singer;
     }
 
     public void setSinger(String singer) {
@@ -101,15 +104,23 @@ public class Music implements Serializable {
     }
 
     public String getAlbum() {
-        return album;
+        return this.album;
     }
 
     public void setAlbum(String album) {
         this.album = album;
     }
 
+    public int getAlbumId() {
+        return this.albumId;
+    }
+
+    public void setAlbumId(int albumId) {
+        this.albumId = albumId;
+    }
+
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public void setUrl(String url) {
@@ -117,7 +128,7 @@ public class Music implements Serializable {
     }
 
     public long getSize() {
-        return size;
+        return this.size;
     }
 
     public void setSize(long size) {
@@ -125,7 +136,7 @@ public class Music implements Serializable {
     }
 
     public long getTime() {
-        return time;
+        return this.time;
     }
 
     public void setTime(long time) {
@@ -133,7 +144,7 @@ public class Music implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -141,7 +152,7 @@ public class Music implements Serializable {
     }
 
     public int getIsCollected() {
-        return isCollected;
+        return this.isCollected;
     }
 
     public void setIsCollected(int isCollected) {
@@ -149,7 +160,7 @@ public class Music implements Serializable {
     }
 
     public long getCollectTime() {
-        return collectTime;
+        return this.collectTime;
     }
 
     public void setCollectTime(long collectTime) {
@@ -157,7 +168,7 @@ public class Music implements Serializable {
     }
 
     public String getListName() {
-        return listName;
+        return this.listName;
     }
 
     public void setListName(String listName) {
@@ -165,10 +176,11 @@ public class Music implements Serializable {
     }
 
     public long getAddTime() {
-        return addTime;
+        return this.addTime;
     }
 
     public void setAddTime(long addTime) {
         this.addTime = addTime;
     }
+
 }

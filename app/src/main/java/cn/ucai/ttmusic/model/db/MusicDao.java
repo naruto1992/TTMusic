@@ -27,14 +27,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
         public final static Property Title = new Property(2, String.class, "title", false, "SONG_TITLE");
         public final static Property Singer = new Property(3, String.class, "singer", false, "SONG_SINGER");
         public final static Property Album = new Property(4, String.class, "album", false, "SONG_ALBUM");
-        public final static Property Url = new Property(5, String.class, "url", false, "SONG_URL");
-        public final static Property Size = new Property(6, long.class, "size", false, "SONG_SIZE");
-        public final static Property Time = new Property(7, long.class, "time", false, "SONG_TIME");
-        public final static Property Name = new Property(8, String.class, "name", false, "SONG_NAME");
-        public final static Property IsCollected = new Property(9, int.class, "isCollected", false, "IS_COLLECTED");
-        public final static Property CollectTime = new Property(10, long.class, "collectTime", false, "CollectTime");
-        public final static Property ListName = new Property(11, String.class, "listName", false, "LIST_NAME");
-        public final static Property AddTime = new Property(12, long.class, "addTime", false, "ADD_TIME");
+        public final static Property AlbumId = new Property(5, int.class, "albumId", false, "SONG_ALBUM_ID");
+        public final static Property Url = new Property(6, String.class, "url", false, "SONG_URL");
+        public final static Property Size = new Property(7, long.class, "size", false, "SONG_SIZE");
+        public final static Property Time = new Property(8, long.class, "time", false, "SONG_TIME");
+        public final static Property Name = new Property(9, String.class, "name", false, "SONG_NAME");
+        public final static Property IsCollected = new Property(10, int.class, "isCollected", false, "IS_COLLECTED");
+        public final static Property CollectTime = new Property(11, long.class, "collectTime", false, "CollectTime");
+        public final static Property ListName = new Property(12, String.class, "listName", false, "LIST_NAME");
+        public final static Property AddTime = new Property(13, long.class, "addTime", false, "ADD_TIME");
     }
 
 
@@ -55,14 +56,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
                 "\"SONG_TITLE\" TEXT," + // 2: title
                 "\"SONG_SINGER\" TEXT," + // 3: singer
                 "\"SONG_ALBUM\" TEXT," + // 4: album
-                "\"SONG_URL\" TEXT," + // 5: url
-                "\"SONG_SIZE\" INTEGER NOT NULL ," + // 6: size
-                "\"SONG_TIME\" INTEGER NOT NULL ," + // 7: time
-                "\"SONG_NAME\" TEXT," + // 8: name
-                "\"IS_COLLECTED\" INTEGER NOT NULL ," + // 9: isCollected
-                "\"CollectTime\" INTEGER NOT NULL ," + // 10: collectTime
-                "\"LIST_NAME\" TEXT," + // 11: listName
-                "\"ADD_TIME\" INTEGER NOT NULL );"); // 12: addTime
+                "\"SONG_ALBUM_ID\" INTEGER NOT NULL ," + // 5: albumId
+                "\"SONG_URL\" TEXT," + // 6: url
+                "\"SONG_SIZE\" INTEGER NOT NULL ," + // 7: size
+                "\"SONG_TIME\" INTEGER NOT NULL ," + // 8: time
+                "\"SONG_NAME\" TEXT," + // 9: name
+                "\"IS_COLLECTED\" INTEGER NOT NULL ," + // 10: isCollected
+                "\"CollectTime\" INTEGER NOT NULL ," + // 11: collectTime
+                "\"LIST_NAME\" TEXT," + // 12: listName
+                "\"ADD_TIME\" INTEGER NOT NULL );"); // 13: addTime
     }
 
     /** Drops the underlying database table. */
@@ -95,26 +97,27 @@ public class MusicDao extends AbstractDao<Music, Long> {
         if (album != null) {
             stmt.bindString(5, album);
         }
+        stmt.bindLong(6, entity.getAlbumId());
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(6, url);
+            stmt.bindString(7, url);
         }
-        stmt.bindLong(7, entity.getSize());
-        stmt.bindLong(8, entity.getTime());
+        stmt.bindLong(8, entity.getSize());
+        stmt.bindLong(9, entity.getTime());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(9, name);
+            stmt.bindString(10, name);
         }
-        stmt.bindLong(10, entity.getIsCollected());
-        stmt.bindLong(11, entity.getCollectTime());
+        stmt.bindLong(11, entity.getIsCollected());
+        stmt.bindLong(12, entity.getCollectTime());
  
         String listName = entity.getListName();
         if (listName != null) {
-            stmt.bindString(12, listName);
+            stmt.bindString(13, listName);
         }
-        stmt.bindLong(13, entity.getAddTime());
+        stmt.bindLong(14, entity.getAddTime());
     }
 
     @Override
@@ -141,26 +144,27 @@ public class MusicDao extends AbstractDao<Music, Long> {
         if (album != null) {
             stmt.bindString(5, album);
         }
+        stmt.bindLong(6, entity.getAlbumId());
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(6, url);
+            stmt.bindString(7, url);
         }
-        stmt.bindLong(7, entity.getSize());
-        stmt.bindLong(8, entity.getTime());
+        stmt.bindLong(8, entity.getSize());
+        stmt.bindLong(9, entity.getTime());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(9, name);
+            stmt.bindString(10, name);
         }
-        stmt.bindLong(10, entity.getIsCollected());
-        stmt.bindLong(11, entity.getCollectTime());
+        stmt.bindLong(11, entity.getIsCollected());
+        stmt.bindLong(12, entity.getCollectTime());
  
         String listName = entity.getListName();
         if (listName != null) {
-            stmt.bindString(12, listName);
+            stmt.bindString(13, listName);
         }
-        stmt.bindLong(13, entity.getAddTime());
+        stmt.bindLong(14, entity.getAddTime());
     }
 
     @Override
@@ -176,14 +180,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // title
             cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // singer
             cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // album
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // url
-            cursor.getLong(offset + 6), // size
-            cursor.getLong(offset + 7), // time
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // name
-            cursor.getInt(offset + 9), // isCollected
-            cursor.getLong(offset + 10), // collectTime
-            cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11), // listName
-            cursor.getLong(offset + 12) // addTime
+            cursor.getInt(offset + 5), // albumId
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // url
+            cursor.getLong(offset + 7), // size
+            cursor.getLong(offset + 8), // time
+            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9), // name
+            cursor.getInt(offset + 10), // isCollected
+            cursor.getLong(offset + 11), // collectTime
+            cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12), // listName
+            cursor.getLong(offset + 13) // addTime
         );
         return entity;
     }
@@ -195,14 +200,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
         entity.setTitle(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setSinger(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
         entity.setAlbum(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setUrl(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setSize(cursor.getLong(offset + 6));
-        entity.setTime(cursor.getLong(offset + 7));
-        entity.setName(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setIsCollected(cursor.getInt(offset + 9));
-        entity.setCollectTime(cursor.getLong(offset + 10));
-        entity.setListName(cursor.isNull(offset + 11) ? null : cursor.getString(offset + 11));
-        entity.setAddTime(cursor.getLong(offset + 12));
+        entity.setAlbumId(cursor.getInt(offset + 5));
+        entity.setUrl(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setSize(cursor.getLong(offset + 7));
+        entity.setTime(cursor.getLong(offset + 8));
+        entity.setName(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setIsCollected(cursor.getInt(offset + 10));
+        entity.setCollectTime(cursor.getLong(offset + 11));
+        entity.setListName(cursor.isNull(offset + 12) ? null : cursor.getString(offset + 12));
+        entity.setAddTime(cursor.getLong(offset + 13));
      }
     
     @Override

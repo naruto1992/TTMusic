@@ -106,7 +106,7 @@
                 android:layout_weight="1"
                 android:focusable="false"
                 android:maxHeight="3dp"
-                android:minHeight="2dp"
+                android:minHeight="3dp"
                 android:progressDrawable="@drawable/seekbar_drawable"
                 android:thumb="@drawable/seekbar_thumb" />
 
@@ -177,18 +177,30 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <me.wcy.lrcview.LrcView
-        android:id="@+id/play_lrc"
+    <RelativeLayout
+        android:id="@+id/play_middle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/play_bottom"
-        android:layout_below="@id/play_top"
-        app:lrcAnimationDuration="1000"
-        app:lrcCurrentTextColor="@color/lrc_cureent"
-        app:lrcDividerHeight="24dp"
-        app:lrcLabel="找不到歌词(&gt;_&lt;)"
-        app:lrcNormalTextColor="@color/white"
-        app:lrcPadding="16dp"
-        app:lrcTextSize="16sp" />
+        android:layout_below="@id/play_top">
 
+        <android.support.v4.view.ViewPager
+            android:id="@+id/playViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <me.wcy.lrcview.LrcView
+            android:id="@+id/play_lrc"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:lrcAnimationDuration="1000"
+            app:lrcCurrentTextColor="@color/lrc_cureent"
+            app:lrcDividerHeight="24dp"
+            app:lrcLabel="找不到歌词(&gt;_&lt;)"
+            app:lrcNormalTextColor="@color/white"
+            app:lrcPadding="16dp"
+            app:lrcTextSize="16sp" />
+
+    </RelativeLayout>
 </RelativeLayout>

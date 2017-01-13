@@ -24,12 +24,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.bean.Singer;
 import cn.ucai.ttmusic.controller.activity.MainActivity;
 import cn.ucai.ttmusic.controller.activity.SearchActivity;
 import cn.ucai.ttmusic.controller.adapter.MyPagerAdapter;
 import cn.ucai.ttmusic.model.I;
-import cn.ucai.ttmusic.model.music.LocalMusicModel;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
 
 public class Fragment_LocalMusic extends BaseFragment {

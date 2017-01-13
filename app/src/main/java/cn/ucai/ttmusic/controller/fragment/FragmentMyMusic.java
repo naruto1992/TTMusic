@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.bean.MusicListBean;
+import cn.ucai.ttmusic.model.bean.MusicListBean;
 import cn.ucai.ttmusic.controller.activity.MainActivity;
 import cn.ucai.ttmusic.controller.adapter.MusicListAdapter;
 import cn.ucai.ttmusic.model.I;
@@ -65,7 +65,9 @@ public class FragmentMyMusic extends BaseFragment {
         mContext = getActivity();
         broadcastManager = LocalBroadcastManager.getInstance(TTApplication.getContext());
         //设置本地音乐数量
-        countLocalMusic.setText("(" + TTApplication.getInstance().getMusicList().size() + ")");
+        if (TTApplication.getInstance().getMusicList() != null) {
+            countLocalMusic.setText("(" + TTApplication.getInstance().getMusicList().size() + ")");
+        }
         musicListModel = new MusicListModel();
         loadMusicList();
         //初始化广播

@@ -8,9 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import java.util.List;
 
@@ -18,12 +16,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.bean.Singer;
+import cn.ucai.ttmusic.model.bean.Singer;
 import cn.ucai.ttmusic.controller.activity.MainActivity;
 import cn.ucai.ttmusic.controller.adapter.ItemClickListener;
 import cn.ucai.ttmusic.controller.adapter.SingerListAdapter;
 import cn.ucai.ttmusic.model.music.LocalMusicModel;
-import cn.ucai.ttmusic.model.utils.ToastUtil;
 
 public class Fragment_SingerList extends BaseFragment implements ItemClickListener {
 

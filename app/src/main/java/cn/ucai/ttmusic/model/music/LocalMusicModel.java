@@ -8,7 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
-import cn.ucai.ttmusic.bean.Singer;
+import cn.ucai.ttmusic.model.bean.Singer;
 import cn.ucai.ttmusic.model.db.Music;
 
 public class LocalMusicModel {
@@ -17,6 +17,7 @@ public class LocalMusicModel {
             MediaStore.Audio.Media._ID,
             MediaStore.Audio.Media.ARTIST,
             MediaStore.Audio.Media.ALBUM,
+            MediaStore.Audio.Media.ALBUM_ID,
             MediaStore.Audio.Media.SIZE,
             MediaStore.Audio.Media.DURATION,
             MediaStore.Audio.Media.DATA,
@@ -53,6 +54,7 @@ public class LocalMusicModel {
                     if ("<unknown>".equals(album)) {
                         album = "未知";
                     }
+                    int albumId = cursor.getInt(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
                     // 歌曲文件大小
                     long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media.SIZE));
                     // 歌曲总播放时间
@@ -71,6 +73,7 @@ public class LocalMusicModel {
                         m.setTitle(title);
                         m.setSinger(singer);
                         m.setAlbum(album);
+                        m.setAlbumId(albumId);
                         m.setSize(size);
                         m.setTime(time);
                         m.setUrl(url);

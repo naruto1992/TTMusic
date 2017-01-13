@@ -1,4 +1,4 @@
-package cn.ucai.ttmusic.bean;
+package cn.ucai.ttmusic.model.bean;
 
 import java.io.Serializable;
 

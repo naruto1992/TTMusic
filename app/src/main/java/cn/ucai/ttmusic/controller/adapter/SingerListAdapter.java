@@ -13,7 +13,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
-import cn.ucai.ttmusic.bean.Singer;
+import cn.ucai.ttmusic.model.bean.Singer;
 import cn.ucai.ttmusic.view.CharAvatarView;
 
 public class SingerListAdapter extends RecyclerView.Adapter<SingerListAdapter.SingerHolder> {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -20,6 +21,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
+import cn.ucai.ttmusic.controller.adapter.PlayViewPagerAdapter;
+import cn.ucai.ttmusic.controller.fragment.PlayViewFragment;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
@@ -27,7 +30,7 @@ import cn.ucai.ttmusic.model.utils.TimeUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
 import me.wcy.lrcview.LrcView;
 
-public class PlayActivity extends BaseActivity {
+public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener {
 
     Context mContext;
 
@@ -51,10 +54,14 @@ public class PlayActivity extends BaseActivity {
     ImageView btnFavorite; //收藏按钮
     @BindView(R.id.play_lrc)
     LrcView lrcView; //歌词
+    @BindView(R.id.playViewPager)
+    ViewPager playViewPager;
+
+    PlayViewPagerAdapter adapter;
+    PlayViewFragment playViewFragment;
 
     Music currentMusic;
     int[] modeIcons = new int[]{R.drawable.mode_normal, R.drawable.mode_single, R.drawable.mode_shuffle};
-    boolean check = true; //是否需要检测是否被收藏
     boolean isCollected; //当前歌曲是否被收藏
 
     MediaPlayer mediaPlayer; // 音乐播放对象
@@ -77,67 +84,116 @@ public class PlayActivity extends BaseActivity {
     }
 
     private void initView() {
-        handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
-        playSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                playStartTime.setText(TimeUtil.toTime(seekBar.getProgress()));
-                musicService.moveToProgress(seekBar.getProgress());
-                lrcView.onDrag(seekBar.getProgress());
-            }
-        });
+        playSeekbar.setOnSeekBarChangeListener(this);
         mediaPlayer = musicService.getMediaPlayer();
         // 设置播放完毕监听
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             public void onCompletion(MediaPlayer mp) {
                 // 如果播放完毕就直接下一曲
                 musicService.nextMusic();
-                showLrc(musicService.getCurrentMusic());
             }
         });
-        //加载歌词
-        showLrc(musicService.getCurrentMusic());
+        initPlayViewPager();
+        handler.sendEmptyMessage(I.Handler.INIT_VIEW);
+        handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
+    }
+
+    private void initPlayViewPager() {
+        adapter = new PlayViewPagerAdapter(getSupportFragmentManager(), musicService.getMusicList());
+        playViewPager.setAdapter(adapter);
+        playViewPager.setOffscreenPageLimit(1);
+        playViewPager.setCurrentItem(musicService.getCurrentItemId());
+        playViewPager.addOnPageChangeListener(this);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        playViewPager.setCurrentItem(position);
+        musicService.playMusic(position);
+        handler.sendEmptyMessage(I.Handler.PAGE_SELECT);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (msg.what == I.Handler.PLAY_MUSIC) {
-                currentMusic = musicService.getCurrentMusic();
-                playMusicName.setText(currentMusic.getTitle());
-                playSingerName.setText(currentMusic.getSinger());
-
-                playSeekbar.setMax(musicService.getDuration());
-                playSeekbar.setProgress(musicService.getCurrentTime());
-                playStartTime.setText(TimeUtil.toTime(musicService.getCurrentTime()));
-                playEndTime.setText(TimeUtil.toTime((int) currentMusic.getTime()));
-
-                playPlayModeBtn.setImageResource(modeIcons[musicService.getPlayMode()]);
-                if (musicService.isPlay()) {
-                    playBtn.setImageResource(R.drawable.pause_button);
-                } else {
-                    playBtn.setImageResource(R.drawable.play_button);
-                }
-                if (check) {
-                    isCollected = DBManager.isCollected(currentMusic.getSongId());
-                    btnFavorite.setImageResource(isCollected ? R.drawable.favorite_selected_on : R.drawable.favorite_selected_off);
-                    check = false;
-                }
-                handler.sendEmptyMessageDelayed(I.Handler.PLAY_MUSIC, 500); //每半秒刷新一次
-            }
-            if (msg.what == I.Handler.SHOW_LRC) {
-                showLrc(musicService.getCurrentMusic());
+            switch (msg.what) {
+                case I.Handler.INIT_VIEW:
+                    setMusicInfo();
+                    setPlayButton();
+                    break;
+                case I.Handler.PLAY_MUSIC:
+                    playSeekbar.setProgress(musicService.getCurrentTime());
+                    handler.sendEmptyMessageDelayed(I.Handler.PLAY_MUSIC, 500);
+                    break;
+                case I.Handler.PAUSE_MUSIC:
+                    setPlayButton();
+                    break;
+                case I.Handler.FRONT_MUSIC:
+                    setMusicInfo();
+                    setPlayButton();
+                    break;
+                case I.Handler.NEXT_MUSIC:
+                    setMusicInfo();
+                    setPlayButton();
+                    break;
+                case I.Handler.SET_MODE:
+                    setPlayMode();
+                    break;
+                case I.Handler.START_LRC:
+                    //mHandler.post(playLrcs);
+                    break;
+                case I.Handler.PAUSE_LRC:
+                    //mHandler.removeCallbacks(playLrcs);
+                    break;
+                case I.Handler.PAGE_SELECT:
+                    setMusicInfo();
+                    setPlayButton();
+                    break;
             }
         }
     };
+
+    //////////////////////////////////与界面相关的几个方法//////////////////////////////////
+    private void setMusicInfo() {
+        currentMusic = musicService.getCurrentMusic();
+        playMusicName.setText(currentMusic.getTitle());
+        playSingerName.setText(currentMusic.getSinger());
+
+        playSeekbar.setMax(musicService.getDuration());
+        playStartTime.setText(TimeUtil.toTime(musicService.getCurrentTime()));
+        playEndTime.setText(TimeUtil.toTime((int) currentMusic.getTime()));
+
+        isCollected = DBManager.isCollected(currentMusic.getSongId());
+        btnFavorite.setImageResource(isCollected ? R.drawable.favorite_selected_on : R.drawable.favorite_selected_off);
+    }
+
+    private void setPlayButton() {
+        if (musicService.isPlay()) {
+            playBtn.setImageResource(R.drawable.pause_button);
+        } else {
+            playBtn.setImageResource(R.drawable.play_button);
+        }
+    }
+
+    private void setPlayMode() {
+        playPlayModeBtn.setImageResource(modeIcons[musicService.getPlayMode()]);
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////
+
+    @OnClick(R.id.play_middle)
+    public void showLrcOrDisco(View view) {
+
+    }
 
     //返回、分享、收藏
     @OnClick({R.id.icon_back, R.id.icon_share, R.id.btn_favorite})
@@ -157,7 +213,6 @@ public class PlayActivity extends BaseActivity {
                     DBManager.collectMusic(currentMusic);
                     ToastUtil.show(mContext, "收藏成功");
                 }
-                check = true;
                 Intent update = new Intent(I.BroadCast.UPDATE_LIST);
                 broadcastManager.sendBroadcast(update);
                 break;
@@ -170,26 +225,23 @@ public class PlayActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.play_pre_btn:
                 musicService.frontMusic();
-                check = true;
-                handler.sendEmptyMessage(I.Handler.SHOW_LRC);
+                handler.sendEmptyMessage(I.Handler.FRONT_MUSIC);
                 break;
             case R.id.play_btn:
                 if (musicService.isPlay()) {
                     musicService.setCurrentTime(musicService.getCurrentTime());
                     musicService.pause();
-                    handler.removeCallbacks(playLrcs);
+                    handler.sendEmptyMessage(I.Handler.PAUSE_LRC);
                 } else {
                     musicService.start();
-                    handler.post(playLrcs);
+                    handler.sendEmptyMessage(I.Handler.START_LRC);
                 }
                 break;
             case R.id.play_next_btn:
                 musicService.nextMusic();
-                check = true;
-                handler.sendEmptyMessage(I.Handler.SHOW_LRC);
+                handler.sendEmptyMessage(I.Handler.NEXT_MUSIC);
                 break;
         }
-        handler.sendEmptyMessage(I.Handler.PLAY_MUSIC); //立即生效
     }
 
     //播放模式切换
@@ -206,9 +258,10 @@ public class PlayActivity extends BaseActivity {
                 musicService.setPlayMode(I.PlayMode.MODE_NORMAL);
                 break;
         }
-        handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);//立即生效
+        handler.sendEmptyMessage(I.Handler.SET_MODE);
     }
 
+    Handler mHandler = new Handler();
     Runnable playLrcs = new Runnable() {
         @Override
         public void run() {
@@ -216,7 +269,7 @@ public class PlayActivity extends BaseActivity {
                 long time = musicService.getCurrentTime();
                 lrcView.updateTime(time);
             }
-            handler.postDelayed(this, 100);
+            mHandler.postDelayed(this, 100);
         }
     };
 
@@ -225,10 +278,25 @@ public class PlayActivity extends BaseActivity {
         File f = new File(music.getUrl().replace(".mp3", ".lrc"));
         try {
             lrcView.loadLrc(f);
-            handler.post(playLrcs);
+            mHandler.post(playLrcs);
         } catch (Exception e) {
             lrcView.setLabel("找不到歌词(&gt;_&lt;)");
         }
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        playStartTime.setText(TimeUtil.toTime(seekBar.getProgress()));
+        musicService.moveToProgress(seekBar.getProgress());
+        lrcView.onDrag(seekBar.getProgress());
     }
 
     @Override

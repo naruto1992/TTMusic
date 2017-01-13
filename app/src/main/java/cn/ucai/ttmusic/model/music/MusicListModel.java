@@ -3,7 +3,7 @@ package cn.ucai.ttmusic.model.music;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.ucai.ttmusic.bean.MusicListBean;
+import cn.ucai.ttmusic.model.bean.MusicListBean;
 import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
 

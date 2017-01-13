@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +13,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
-import cn.ucai.ttmusic.bean.MusicListBean;
+import cn.ucai.ttmusic.model.bean.MusicListBean;
 
 public class MusicListAdapter extends BaseAdapter {
 

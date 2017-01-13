@@ -1,42 +1,31 @@
 package cn.ucai.ttmusic.controller.fragment;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.io.Serializable;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.bean.Singer;
+import cn.ucai.ttmusic.model.bean.Singer;
 import cn.ucai.ttmusic.controller.activity.MainActivity;
-import cn.ucai.ttmusic.controller.activity.SearchActivity;
 import cn.ucai.ttmusic.controller.adapter.ItemClickListener;
 import cn.ucai.ttmusic.controller.adapter.MusicAdapter;
 import cn.ucai.ttmusic.model.I;
-import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.music.LocalMusicModel;
-import cn.ucai.ttmusic.model.utils.ToastUtil;
 
 public class Fragment_MusicsOfSinger extends BaseFragment implements ItemClickListener {
 

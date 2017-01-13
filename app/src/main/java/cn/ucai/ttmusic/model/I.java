@@ -15,8 +15,15 @@ public interface I {
     }
 
     interface Handler {
-        int PLAY_MUSIC = 0X000;
-        int SHOW_LRC = 0x111;
+        int INIT_VIEW = 0X0;
+        int PLAY_MUSIC = 0X1;
+        int PAUSE_MUSIC = 0X2;
+        int FRONT_MUSIC = 0X3;
+        int NEXT_MUSIC = 0X4;
+        int SET_MODE = 0X5;
+        int START_LRC = 0X6;
+        int PAUSE_LRC = 0X7;
+        int PAGE_SELECT = 0X8;
     }
 
     interface BroadCast {
@@ -35,6 +42,7 @@ public interface I {
 
     interface Intent {
         String MUSIC_SERVICE = "music_service";
+        String MUSIC = "music";
 
         String SEARCH_TYPE = "search_type";
         String SEARCH_DATA = "search_data";
