@@ -177,35 +177,11 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <FrameLayout
+    <android.support.v4.view.ViewPager
         android:id="@+id/play_middle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/play_bottom"
-        android:layout_below="@id/play_top">
+        android:layout_below="@id/play_top" />
 
-        <me.wcy.lrcview.LrcView
-            android:id="@+id/play_lrc"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone"
-            app:lrcAnimationDuration="1000"
-            app:lrcCurrentTextColor="@color/lrc_cureent"
-            app:lrcDividerHeight="24dp"
-            app:lrcLabel="找不到歌词(&gt;_&lt;)"
-            app:lrcNormalTextColor="@color/white"
-            app:lrcPadding="16dp"
-            app:lrcTextSize="16sp" />
-
-        <cn.ucai.ttmusic.view.MyPlayViewPager
-            android:id="@+id/playViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <View
-            android:id="@+id/play_cover"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </FrameLayout>
 </RelativeLayout>

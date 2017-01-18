@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -27,7 +28,7 @@ import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
 import cn.ucai.ttmusic.view.DiscoView;
 
-public class PlayViewFragment extends Fragment implements IPlayView {
+public class DiscoFragment extends Fragment implements IPlayView {
 
     Context context;
     Music currentMusic;
@@ -58,12 +59,16 @@ public class PlayViewFragment extends Fragment implements IPlayView {
     }
 
     private void initView() {
-        currentMusic = (Music) getArguments().getSerializable(I.Intent.CURRENT_MUSIC);
-        if (currentMusic == null || musicService == null) {
+        if (musicService == null) {
             return;
         }
         initAnimation();
-        playDiscoview.init(currentMusic);
+        currentMusic = musicService.getCurrentMusic();
+        if (currentMusic == null) {
+            playDiscoview.initByBitmap(null);
+        } else {
+            playDiscoview.initByMusic(currentMusic);
+        }
     }
 
     private void initAnimation() {

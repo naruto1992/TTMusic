@@ -11,16 +11,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.LinearInterpolator;
 
 import cn.ucai.ttmusic.R;
-import cn.ucai.ttmusic.controller.interfaze.IPlayView;
 import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.utils.MusicUtil;
 
@@ -103,13 +101,13 @@ public class DiscoView extends View {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////
-    public void init(Bitmap bitmap) {
+    public void initByBitmap(Bitmap bitmap) {
         release();
         this.mBitmap = bitmap;
         setView(mBitmap);
     }
 
-    public void init(Music music) {
+    public void initByMusic(Music music) {
         release();
         started = false;
         this.mBitmap = MusicUtil.getAlbumImage(mContext, music.getSongId(), music.getAlbumId());

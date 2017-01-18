@@ -21,9 +21,6 @@ public interface I {
         int FRONT_MUSIC = 0X3;
         int NEXT_MUSIC = 0X4;
         int SET_MODE = 0X5;
-        int START_LRC = 0X6;
-        int PAUSE_LRC = 0X7;
-        int PAGE_SELECT = 0X8;
     }
 
     interface BroadCast {

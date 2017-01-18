@@ -8,34 +8,27 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.ucai.ttmusic.R;
 import cn.ucai.ttmusic.TTApplication;
-import cn.ucai.ttmusic.controller.adapter.PlayViewPagerAdapter;
-import cn.ucai.ttmusic.controller.fragment.PlayViewFragment;
+import cn.ucai.ttmusic.controller.adapter.PlayPagerAdapter;
+import cn.ucai.ttmusic.controller.fragment.DiscoFragment;
+import cn.ucai.ttmusic.controller.fragment.LrcFrament;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.utils.TimeUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
-import cn.ucai.ttmusic.view.DiscoView;
-import cn.ucai.ttmusic.view.MyPlayViewPager;
-import me.wcy.lrcview.LrcView;
 
-public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener, ViewPager.OnPageChangeListener {
+public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
 
     Context mContext;
 
@@ -57,14 +50,8 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     ImageView playBtn; //播放按钮
     @BindView(R.id.btn_favorite)
     ImageView btnFavorite; //收藏按钮
-    @BindView(R.id.play_lrc)
-    LrcView lrcView; //歌词
-    @BindView(R.id.playViewPager)
-    MyPlayViewPager playViewPager;
-
-    List<PlayViewFragment> fragments = new ArrayList<>();
-    PlayViewPagerAdapter adapter;
-    int currentPosition;
+    @BindView(R.id.play_middle)
+    ViewPager playViewPager;
 
     Music currentMusic;
     int[] modeIcons = new int[]{R.drawable.mode_normal, R.drawable.mode_single, R.drawable.mode_shuffle};
@@ -106,39 +93,11 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     }
 
     private void initPlayViewPager() {
-        for (Music music : musicService.getMusicList()) {
-            PlayViewFragment fragment = new PlayViewFragment();
-            Bundle data = new Bundle();
-            data.putSerializable(I.Intent.CURRENT_MUSIC, music);
-            fragment.setArguments(data);
-            fragments.add(fragment);
-        }
-        adapter = new PlayViewPagerAdapter(getSupportFragmentManager(), fragments);
+        DiscoFragment discoFragment = new DiscoFragment();
+        LrcFrament lrcFrament = new LrcFrament();
+        PlayPagerAdapter adapter = new PlayPagerAdapter(getSupportFragmentManager(), discoFragment, lrcFrament);
         playViewPager.setAdapter(adapter);
-        playViewPager.setOffscreenPageLimit(2);
-        playViewPager.addOnPageChangeListener(this);
-        currentPosition = playViewPager.getCurrentItem();
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (position == musicService.getCurrentItemId()) {
-            return;
-        }
-        if (fragments.get(currentPosition).isRotating()) {
-            fragments.get(currentPosition).pauseRotate();
-        }
-        musicService.playMusic(position);
-        fragments.get(position).startRotate();
-        handler.sendEmptyMessage(I.Handler.PAGE_SELECT);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
+        playViewPager.setCurrentItem(0);
     }
 
     private Handler handler = new Handler() {
@@ -146,11 +105,9 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case I.Handler.INIT_VIEW:
-                    adapter.currentFragment.stopRotate();
                     setMusicInfo();
                     setPlayButton();
                     setPlayMode();
-                    initDiscoView();
                     break;
                 case I.Handler.PLAY_MUSIC:
                     setPlayButton();
@@ -162,35 +119,15 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     setPlayButton();
                     break;
                 case I.Handler.FRONT_MUSIC:
-                    adapter.currentFragment.stopRotate();
                     setMusicInfo();
                     setPlayButton();
-                    initDiscoView();
-                    mHandler.removeCallbacks(playLrcs);
-                    showLrc(musicService.getCurrentMusic());
                     break;
                 case I.Handler.NEXT_MUSIC:
-                    adapter.currentFragment.stopRotate();
                     setMusicInfo();
                     setPlayButton();
-                    initDiscoView();
-                    mHandler.removeCallbacks(playLrcs);
-                    showLrc(musicService.getCurrentMusic());
                     break;
                 case I.Handler.SET_MODE:
                     setPlayMode();
-                    break;
-                case I.Handler.START_LRC:
-                    showLrc(musicService.getCurrentMusic());
-                    break;
-                case I.Handler.PAUSE_LRC:
-                    mHandler.removeCallbacks(playLrcs);
-                    break;
-                case I.Handler.PAGE_SELECT:
-                    setMusicInfo();
-                    setPlayButton();
-                    mHandler.removeCallbacks(playLrcs);
-                    handler.sendEmptyMessage(I.Handler.START_LRC);
                     break;
             }
         }
@@ -221,36 +158,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
         playPlayModeBtn.setImageResource(modeIcons[musicService.getPlayMode()]);
     }
 
-    private void initDiscoView() {
-        if (fragments.get(currentPosition).isRotating()) {
-            fragments.get(currentPosition).pauseRotate();
-        }
-        int position = musicService.getCurrentItemId();
-        playViewPager.setCurrentItem(position);
-        fragments.get(position).startRotate();
-        currentPosition = position;
-        if (!musicService.isPlay()) {
-            fragments.get(position).pauseRotate();
-        }
-    }
-
     ////////////////////////////////////////////////////////////////////////////////////////
-    boolean isLrcShow = false;
-
-    @OnClick(R.id.play_cover)
-    public void showLrcOrDisco(View view) {
-        if (isLrcShow) {
-            playViewPager.setVisibility(View.VISIBLE);
-            lrcView.setVisibility(View.GONE);
-            handler.sendEmptyMessage(I.Handler.PAUSE_LRC);
-            isLrcShow = false;
-        } else {
-            playViewPager.setVisibility(View.GONE);
-            lrcView.setVisibility(View.VISIBLE);
-            handler.sendEmptyMessage(I.Handler.START_LRC);
-            isLrcShow = true;
-        }
-    }
 
     //返回、分享、收藏
     @OnClick({R.id.icon_back, R.id.icon_share, R.id.btn_favorite})
@@ -289,12 +197,8 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     musicService.setCurrentTime(musicService.getCurrentTime());
                     musicService.pause();
                     handler.sendEmptyMessage(I.Handler.PAUSE_MUSIC);
-                    handler.sendEmptyMessage(I.Handler.PAUSE_LRC);
-                    adapter.currentFragment.pauseRotate();
                 } else {
                     musicService.start();
-                    handler.sendEmptyMessage(I.Handler.START_LRC);
-                    adapter.currentFragment.reStartRotate();
                 }
                 break;
             case R.id.play_next_btn:
@@ -321,29 +225,6 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
         handler.sendEmptyMessage(I.Handler.SET_MODE);
     }
 
-    Handler mHandler = new Handler();
-    Runnable playLrcs = new Runnable() {
-        @Override
-        public void run() {
-            if (musicService.isPlay()) {
-                long time = musicService.getCurrentTime();
-                lrcView.updateTime(time);
-            }
-            mHandler.postDelayed(this, 100);
-        }
-    };
-
-    public void showLrc(Music music) {
-        // 读取同文件夹下的歌词文件
-        File f = new File(music.getUrl().replace(".mp3", ".lrc"));
-        try {
-            lrcView.loadLrc(f);
-            mHandler.post(playLrcs);
-        } catch (Exception e) {
-            lrcView.setLabel("找不到歌词(&gt;_&lt;)");
-        }
-    }
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
     }
@@ -356,17 +237,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     public void onStopTrackingTouch(SeekBar seekBar) {
         playStartTime.setText(TimeUtil.toTime(seekBar.getProgress()));
         musicService.moveToProgress(seekBar.getProgress());
-        lrcView.onDrag(seekBar.getProgress());
+//        lrcView.onDrag(seekBar.getProgress());
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        handler.removeCallbacks(playLrcs);
-        super.onDestroy();
-    }
 }
