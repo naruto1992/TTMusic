@@ -47,4 +47,11 @@
         <item name="android:background">@drawable/list_item_bg</item>
     </style>
 
+    <style name="dialog_style" parent="@android:style/Theme.Dialog">
+        <item name="android:windowIsFloating">true</item>   <!--对话框是否浮现在activity之上-->
+        <item name="android:windowNoTitle">true</item> <!--对话框无标题-->
+        <item name="android:windowBackground">@drawable/custom_dialog_bg</item> <!--对话框背景-->
+        <item name="android:backgroundDimEnabled">true</item> <!--对话框的后台activity变暗-->
+    </style>
+
 </resources>

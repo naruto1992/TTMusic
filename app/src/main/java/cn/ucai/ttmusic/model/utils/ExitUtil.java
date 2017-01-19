@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
+import android.widget.Toast;
 
 import cn.ucai.ttmusic.controller.service.MusicService;
 
@@ -13,7 +14,8 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 public class ExitUtil {
 
     public static void exit(final Context context) {
-        new AlertDialog.Builder(context)
+        DialogBuilder builder = new DialogBuilder(context);
+        builder.setTitle("提示")
                 .setMessage("确定要退出吗？")
                 .setPositiveButton("退出", new DialogInterface.OnClickListener() {
                     @Override

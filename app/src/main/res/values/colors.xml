@@ -12,4 +12,10 @@
     <color name="border_color">#333233</color>
     <color name="fragment_bg">#f9f7f7</color>
     <color name="lrc_cureent">#FFFBF81D</color>
+    <!-- dialog中按钮字体颜色 -->
+    <color name="light_gray">#EAEAEA</color>
+    <color name="btn_text_color">#ff1E90FF</color>
+    <color name="line_color">#D1D1D1</color>
+
+    <color name="dialog_color">@color/white</color>
 </resources>
