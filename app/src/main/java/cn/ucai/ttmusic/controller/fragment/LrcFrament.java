@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,10 @@ public class LrcFrament extends Fragment {
     };
 
     public void showLrc(Music music) {
+        if (lrcView == null) {
+            Log.e("main","lrcView == null");
+            return;
+        }
         mHandler.removeCallbacks(playLrcs);
         // 读取同文件夹下的歌词文件
         File f = new File(music.getUrl().replace(".mp3", ".lrc"));

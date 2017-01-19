@@ -1,12 +1,10 @@
 package cn.ucai.ttmusic.controller.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,7 +21,6 @@ import cn.ucai.ttmusic.controller.adapter.PlayPagerAdapter;
 import cn.ucai.ttmusic.controller.fragment.DiscoFragment;
 import cn.ucai.ttmusic.controller.fragment.LrcFrament;
 import cn.ucai.ttmusic.model.I;
-import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
 import cn.ucai.ttmusic.model.utils.TimeUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
@@ -48,21 +45,14 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     ImageView playPlayModeBtn; //播放模式按钮
     @BindView(R.id.play_btn)
     ImageView playBtn; //播放按钮
-    @BindView(R.id.btn_favorite)
-    ImageView btnFavorite; //收藏按钮
     @BindView(R.id.play_middle)
     ViewPager playViewPager;
 
     Music currentMusic;
     int[] modeIcons = new int[]{R.drawable.mode_normal, R.drawable.mode_single, R.drawable.mode_shuffle};
-    boolean isCollected; //当前歌曲是否被收藏
-
     MediaPlayer mediaPlayer; // 音乐播放对象
-    LocalBroadcastManager broadcastManager;
-
     DiscoFragment discoFragment;
     LrcFrament lrcFrament;
-    PlayPagerAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +66,6 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
         if (musicService == null) {
             return;
         }
-        broadcastManager = LocalBroadcastManager.getInstance(TTApplication.getContext());
         initView();
     }
 
@@ -93,13 +82,12 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
         });
         initPlayViewPager();
         handler.sendEmptyMessage(I.Handler.INIT_VIEW);
-        handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
     }
 
     private void initPlayViewPager() {
         discoFragment = new DiscoFragment();
         lrcFrament = new LrcFrament();
-        adapter = new PlayPagerAdapter(getSupportFragmentManager(), discoFragment, lrcFrament);
+        PlayPagerAdapter adapter = new PlayPagerAdapter(getSupportFragmentManager(), discoFragment, lrcFrament);
         playViewPager.setAdapter(adapter);
         playViewPager.setOffscreenPageLimit(2);
         playViewPager.setCurrentItem(0);
@@ -113,7 +101,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     setMusicInfo();
                     setPlayButton();
                     setPlayMode();
-                    discoFragment.startRotate(currentMusic);
+                    discoFragment.startRotate(musicService.getCurrentMusic(), musicService.isPlay());
                     lrcFrament.showLrc(currentMusic);
                     break;
                 case I.Handler.PLAY_MUSIC:
@@ -128,13 +116,13 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                 case I.Handler.FRONT_MUSIC:
                     setMusicInfo();
                     setPlayButton();
-                    discoFragment.startRotate(currentMusic);
+                    discoFragment.startRotate(musicService.getCurrentMusic(), true);
                     lrcFrament.showLrc(currentMusic);
                     break;
                 case I.Handler.NEXT_MUSIC:
                     setMusicInfo();
                     setPlayButton();
-                    discoFragment.startRotate(currentMusic);
+                    discoFragment.startRotate(musicService.getCurrentMusic(), true);
                     lrcFrament.showLrc(currentMusic);
                     break;
                 case I.Handler.SET_MODE:
@@ -161,9 +149,6 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
 
         playSeekbar.setMax(musicService.getDuration());
         playEndTime.setText(TimeUtil.toTime((int) currentMusic.getTime()));
-
-        isCollected = DBManager.isCollected(currentMusic.getSongId());
-        btnFavorite.setImageResource(isCollected ? R.drawable.favorite_selected_on : R.drawable.favorite_selected_off);
     }
 
     private void setPlayButton() {
@@ -181,7 +166,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     ////////////////////////////////////////////////////////////////////////////////////////
 
     //返回、分享、收藏
-    @OnClick({R.id.icon_back, R.id.icon_share, R.id.btn_favorite})
+    @OnClick({R.id.icon_back, R.id.icon_share})
     public void action(View view) {
         switch (view.getId()) {
             case R.id.icon_back:
@@ -189,17 +174,6 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                 break;
             case R.id.icon_share:
                 ToastUtil.show(mContext, "分享(开发中)");
-                break;
-            case R.id.btn_favorite:
-                if (isCollected) {
-                    DBManager.cancelCollect(currentMusic.getSongId());
-                    ToastUtil.show(mContext, "取消收藏");
-                } else {
-                    DBManager.collectMusic(currentMusic);
-                    ToastUtil.show(mContext, "收藏成功");
-                }
-                Intent update = new Intent(I.BroadCast.UPDATE_LIST);
-                broadcastManager.sendBroadcast(update);
                 break;
         }
     }
