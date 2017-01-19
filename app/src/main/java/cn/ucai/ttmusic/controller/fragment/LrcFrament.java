@@ -24,7 +24,6 @@ public class LrcFrament extends Fragment {
     LrcView lrcView;
 
     Context context;
-    Music currentMusic;
     IMusicService musicService; //当前播放服务
 
     @Override
@@ -46,8 +45,6 @@ public class LrcFrament extends Fragment {
         if (musicService == null) {
             return;
         }
-        currentMusic = musicService.getCurrentMusic();
-        showLrc(currentMusic);
     }
 
     Handler mHandler = new Handler();
@@ -62,7 +59,8 @@ public class LrcFrament extends Fragment {
         }
     };
 
-    private void showLrc(Music music) {
+    public void showLrc(Music music) {
+        mHandler.removeCallbacks(playLrcs);
         // 读取同文件夹下的歌词文件
         File f = new File(music.getUrl().replace(".mp3", ".lrc"));
         try {
@@ -75,13 +73,13 @@ public class LrcFrament extends Fragment {
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         mHandler.removeCallbacks(playLrcs);
+        super.onDestroyView();
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mHandler.removeCallbacks(playLrcs);
+        super.onDestroy();
     }
 }

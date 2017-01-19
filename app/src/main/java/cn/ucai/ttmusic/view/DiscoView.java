@@ -123,11 +123,13 @@ public class DiscoView extends View {
     public void reStart() {
         if (discObjectAnimator.isPaused()) {
             discObjectAnimator.resume();
+            started = true;
         }
     }
 
     public void pause() {
         discObjectAnimator.pause();
+        started = false;
     }
 
     public boolean isStarted() {

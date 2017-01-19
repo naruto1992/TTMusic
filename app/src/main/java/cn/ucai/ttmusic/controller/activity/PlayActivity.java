@@ -60,6 +60,10 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     MediaPlayer mediaPlayer; // 音乐播放对象
     LocalBroadcastManager broadcastManager;
 
+    DiscoFragment discoFragment;
+    LrcFrament lrcFrament;
+    PlayPagerAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +97,11 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     }
 
     private void initPlayViewPager() {
-        DiscoFragment discoFragment = new DiscoFragment();
-        LrcFrament lrcFrament = new LrcFrament();
-        PlayPagerAdapter adapter = new PlayPagerAdapter(getSupportFragmentManager(), discoFragment, lrcFrament);
+        discoFragment = new DiscoFragment();
+        lrcFrament = new LrcFrament();
+        adapter = new PlayPagerAdapter(getSupportFragmentManager(), discoFragment, lrcFrament);
         playViewPager.setAdapter(adapter);
+        playViewPager.setOffscreenPageLimit(2);
         playViewPager.setCurrentItem(0);
     }
 
@@ -108,28 +113,43 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     setMusicInfo();
                     setPlayButton();
                     setPlayMode();
+                    discoFragment.startRotate(currentMusic);
+                    lrcFrament.showLrc(currentMusic);
                     break;
                 case I.Handler.PLAY_MUSIC:
                     setPlayButton();
-                    playStartTime.setText(TimeUtil.toTime(musicService.getCurrentTime()));
-                    playSeekbar.setProgress(musicService.getCurrentTime());
-                    handler.sendEmptyMessageDelayed(I.Handler.PLAY_MUSIC, 500);
+                    discoFragment.reStartRotate();
+                    handler.post(setTimeAndProgress);
                     break;
                 case I.Handler.PAUSE_MUSIC:
                     setPlayButton();
+                    discoFragment.pauseRotate();
                     break;
                 case I.Handler.FRONT_MUSIC:
                     setMusicInfo();
                     setPlayButton();
+                    discoFragment.startRotate(currentMusic);
+                    lrcFrament.showLrc(currentMusic);
                     break;
                 case I.Handler.NEXT_MUSIC:
                     setMusicInfo();
                     setPlayButton();
+                    discoFragment.startRotate(currentMusic);
+                    lrcFrament.showLrc(currentMusic);
                     break;
                 case I.Handler.SET_MODE:
                     setPlayMode();
                     break;
             }
+        }
+    };
+
+    Runnable setTimeAndProgress = new Runnable() {
+        @Override
+        public void run() {
+            playStartTime.setText(TimeUtil.toTime(musicService.getCurrentTime()));
+            playSeekbar.setProgress(musicService.getCurrentTime());
+            handler.postDelayed(this, 500);
         }
     };
 
@@ -199,6 +219,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     handler.sendEmptyMessage(I.Handler.PAUSE_MUSIC);
                 } else {
                     musicService.start();
+                    handler.sendEmptyMessage(I.Handler.PLAY_MUSIC);
                 }
                 break;
             case R.id.play_next_btn:
@@ -237,7 +258,11 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     public void onStopTrackingTouch(SeekBar seekBar) {
         playStartTime.setText(TimeUtil.toTime(seekBar.getProgress()));
         musicService.moveToProgress(seekBar.getProgress());
-//        lrcView.onDrag(seekBar.getProgress());
     }
 
+    @Override
+    protected void onDestroy() {
+        handler.removeCallbacks(setTimeAndProgress);
+        super.onDestroy();
+    }
 }
