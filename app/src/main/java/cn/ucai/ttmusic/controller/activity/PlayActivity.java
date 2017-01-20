@@ -70,6 +70,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     }
 
     private void initView() {
+        initPlayViewPager();
         playSeekbar.setOnSeekBarChangeListener(this);
         mediaPlayer = musicService.getMediaPlayer();
         // 设置播放完毕监听
@@ -80,7 +81,6 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                 handler.sendEmptyMessage(I.Handler.NEXT_MUSIC);
             }
         });
-        initPlayViewPager();
         handler.sendEmptyMessage(I.Handler.INIT_VIEW);
     }
 
@@ -101,13 +101,12 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     setMusicInfo();
                     setPlayButton();
                     setPlayMode();
-                    discoFragment.startRotate(musicService.getCurrentMusic(), musicService.isPlay());
-                    lrcFrament.showLrc(currentMusic);
+                    handler.post(startDisco);
+                    handler.post(setTimeAndProgress);
                     break;
                 case I.Handler.PLAY_MUSIC:
                     setPlayButton();
                     discoFragment.reStartRotate();
-                    handler.post(setTimeAndProgress);
                     break;
                 case I.Handler.PAUSE_MUSIC:
                     setPlayButton();
@@ -129,6 +128,13 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     setPlayMode();
                     break;
             }
+        }
+    };
+    Runnable startDisco = new Runnable() {
+        @Override
+        public void run() {
+            discoFragment.startRotate(musicService.getCurrentMusic(), musicService.isPlay());
+            lrcFrament.showLrc(currentMusic);
         }
     };
 
@@ -235,7 +241,13 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     }
 
     @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    @Override
     protected void onDestroy() {
+        handler.removeCallbacks(startDisco);
         handler.removeCallbacks(setTimeAndProgress);
         super.onDestroy();
     }

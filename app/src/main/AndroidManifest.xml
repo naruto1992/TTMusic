@@ -44,6 +44,7 @@
 
         <activity
             android:name=".controller.activity.PlayActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/full_screen_style" />
 
