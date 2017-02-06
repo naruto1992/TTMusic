@@ -171,8 +171,8 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
 
     ////////////////////////////////////////////////////////////////////////////////////////
 
-    //返回、分享、收藏
-    @OnClick({R.id.icon_back, R.id.icon_share})
+    //返回、分享、列表
+    @OnClick({R.id.icon_back, R.id.icon_share, R.id.play_music_list})
     public void action(View view) {
         switch (view.getId()) {
             case R.id.icon_back:
@@ -180,6 +180,9 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                 break;
             case R.id.icon_share:
                 ToastUtil.show(mContext, "分享(开发中)");
+                break;
+            case R.id.play_music_list:
+                ToastUtil.show(mContext, "播放列表(开发中)");
                 break;
         }
     }

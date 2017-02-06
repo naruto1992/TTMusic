@@ -168,11 +168,12 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/play_music_list"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/favorite_selected_off" />
+                android:src="@drawable/icon_play_list" />
         </RelativeLayout>
     </LinearLayout>
 

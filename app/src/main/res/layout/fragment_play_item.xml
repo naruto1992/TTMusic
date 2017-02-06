@@ -13,12 +13,18 @@
     <ImageView
         android:id="@+id/play_needle"
         android:layout_width="100dp"
-        android:layout_height="150dp"
+        android:layout_height="140dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginLeft="90px"
-        android:layout_marginTop="-20dp"
+        android:layout_marginTop="12dp"
         android:scaleType="fitStart"
         android:src="@drawable/icon_play_needle" />
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="-15dp"
+        android:src="@drawable/icon_play_center" />
 
     <ImageView
         android:id="@+id/btn_favorite"

@@ -127,12 +127,15 @@ public class DiscoFragment extends Fragment {
             if (isCollected) {
                 DBManager.cancelCollect(currentMusic.getSongId());
                 ToastUtil.show(context, "取消收藏");
+                isCollected = false;
             } else {
                 DBManager.collectMusic(currentMusic);
                 ToastUtil.show(context, "收藏成功");
+                isCollected = true;
             }
             Intent update = new Intent(I.BroadCast.UPDATE_LIST);
             broadcastManager.sendBroadcast(update);
+            btnFavorite.setImageResource(isCollected ? R.drawable.favorite_selected_on : R.drawable.favorite_selected_off);
         }
     }
 }
