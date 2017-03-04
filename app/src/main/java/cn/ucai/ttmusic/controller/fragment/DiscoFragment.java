@@ -85,7 +85,7 @@ public class DiscoFragment extends Fragment {
         }
     }
 
-    private void initCollect(Music music) {
+    public void initCollect(Music music) {
         isCollected = DBManager.isCollected(music.getSongId());
         btnFavorite.setImageResource(isCollected ? R.drawable.favorite_selected_on : R.drawable.favorite_selected_off);
     }

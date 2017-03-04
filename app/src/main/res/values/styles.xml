@@ -9,8 +9,10 @@
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
     </style>
 
-    <style name="full_screen_style" parent="AppTheme"/>
+    <!--全屏沉浸式风格：非19版本以上-->
+    <style name="full_screen_style" parent="AppTheme" />
 
+    <!--界面壁纸-->
     <style name="style_wallpaper">
         <item name="android:background">@drawable/bg_main</item>
     </style>
@@ -31,6 +33,7 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <!--下标签风格-->
     <style name="style_tabs" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:button">@null</item>
         <item name="android:layout_height">50dp</item>
@@ -39,6 +42,7 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <!--列表背景-->
     <style name="style_list_bg">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">56dp</item>
@@ -47,11 +51,18 @@
         <item name="android:background">@drawable/list_item_bg</item>
     </style>
 
+    <!--对话框风格-->
     <style name="dialog_style" parent="@android:style/Theme.Dialog">
         <item name="android:windowIsFloating">true</item>   <!--对话框是否浮现在activity之上-->
         <item name="android:windowNoTitle">true</item> <!--对话框无标题-->
         <item name="android:windowBackground">@drawable/custom_dialog_bg</item> <!--对话框背景-->
         <item name="android:backgroundDimEnabled">true</item> <!--对话框的后台activity变暗-->
+    </style>
+
+    <!--弹出框动画风格-->
+    <style name="popup_animation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/out_anim</item>
     </style>
 
 </resources>

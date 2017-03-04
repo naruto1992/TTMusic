@@ -164,7 +164,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                 ToastUtil.show(mContext, "设置(开发中)");
                 break;
             case R.id.menu_exit:
-                new ExitUtil().exit(mContext);
+                new ExitUtil().exit(mContext,connection);
                 break;
         }
         mDrawerLayout.closeDrawers();

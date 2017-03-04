@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
@@ -13,7 +14,7 @@ import static android.content.Context.NOTIFICATION_SERVICE;
 
 public class ExitUtil {
 
-    public static void exit(final Context context) {
+    public static void exit(final Context context, final ServiceConnection connection) {
         DialogBuilder builder = new DialogBuilder(context);
         builder.setTitle("提示")
                 .setMessage("确定要退出吗？")
@@ -21,7 +22,7 @@ public class ExitUtil {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //关闭服务
-                        context.stopService(new Intent(context, MusicService.class));
+                        context.unbindService(connection);
                         //关闭通知
                         NotificationManager manger = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
                         manger.cancelAll();

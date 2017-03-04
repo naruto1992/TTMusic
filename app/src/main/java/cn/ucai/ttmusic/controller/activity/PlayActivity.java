@@ -1,16 +1,24 @@
 package cn.ucai.ttmusic.controller.activity;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,12 +28,16 @@ import cn.ucai.ttmusic.TTApplication;
 import cn.ucai.ttmusic.controller.adapter.PlayPagerAdapter;
 import cn.ucai.ttmusic.controller.fragment.DiscoFragment;
 import cn.ucai.ttmusic.controller.fragment.LrcFrament;
+import cn.ucai.ttmusic.controller.service.MusicService;
 import cn.ucai.ttmusic.model.I;
+import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
+import cn.ucai.ttmusic.model.utils.DialogBuilder;
 import cn.ucai.ttmusic.model.utils.TimeUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
+import cn.ucai.ttmusic.view.MusicListPopWin;
 
-public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener {
+public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChangeListener, MusicListPopWin.PopWinListener {
 
     Context mContext;
 
@@ -53,6 +65,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     MediaPlayer mediaPlayer; // 音乐播放对象
     DiscoFragment discoFragment;
     LrcFrament lrcFrament;
+    MusicListPopWin win;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +92,9 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                 // 如果播放完毕就直接下一曲
                 musicService.nextMusic();
                 handler.sendEmptyMessage(I.Handler.NEXT_MUSIC);
+                if (win.isShowing()) {
+                    win.updateList();
+                }
             }
         });
         handler.sendEmptyMessage(I.Handler.INIT_VIEW);
@@ -182,9 +198,79 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                 ToastUtil.show(mContext, "分享(开发中)");
                 break;
             case R.id.play_music_list:
-                ToastUtil.show(mContext, "播放列表(开发中)");
+                win = new MusicListPopWin(this);
+                win.showAtLocation(findViewById(R.id.play_main_view), Gravity.CENTER, 0, 0);
+                win.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        backgroundAlpha(1f);
+                    }
+                });
+                win.setListener(this);
+                backgroundAlpha(0.5f);
                 break;
         }
+    }
+
+    //改变弹出框弹出和消失时的背景透明度
+    private void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getWindow().setAttributes(lp);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+    }
+
+    @Override
+    public void onItemClick() {
+        handler.sendEmptyMessage(I.Handler.INIT_VIEW);
+    }
+
+    @Override
+    public void onCurrentDelete(int position) {
+        musicService = TTApplication.getInstance().getMusicService();
+        List<Music> list = musicService.getMusicList();
+        if (position > list.size() - 1) {
+            position = 0;
+        }
+        musicService.playMusic(position);
+        win.updateList();
+        handler.sendEmptyMessage(I.Handler.INIT_VIEW);
+    }
+
+    @Override
+    public void onCollectAll() {
+        List<Music> list = musicService.getMusicList();
+        for (Music music : list) {
+            DBManager.collectMusic(music);
+        }
+        ToastUtil.show(mContext, "收藏完毕");
+        Intent update = new Intent(I.BroadCast.UPDATE_LIST);
+        LocalBroadcastManager.getInstance(TTApplication.getContext()).sendBroadcast(update);
+        discoFragment.initCollect(musicService.getCurrentMusic());
+    }
+
+    @Override
+    public void onClearAll() {
+        DialogBuilder builder = new DialogBuilder(this);
+        builder.setTitle("提示")
+                .setMessage("确定要清空播放列表？")
+                .setPositiveButton("清空", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //停止音乐
+                        musicService.stop();
+                        //重启界面
+                        PlayActivity.this.finish();
+                        Intent intent = new Intent(PlayActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        //关闭通知
+                        NotificationManager manger = (NotificationManager) mContext.getSystemService(NOTIFICATION_SERVICE);
+                        manger.cancelAll();
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .create().show();
     }
 
     //播放、上一曲、下一曲
