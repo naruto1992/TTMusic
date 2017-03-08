@@ -2,13 +2,9 @@ package cn.ucai.ttmusic.model.utils;
 
 import android.graphics.Bitmap;
 
-/**
- * Created by Long
- * on 2016/10/18.
- */
+public class FastBlurUtil {
 
-public class FastBlur {
-    public static Bitmap blur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
+    public static Bitmap doBlur(Bitmap sentBitmap, int radius, boolean canReuseInBitmap) {
 
         // Stack Blur v1.0 from
         // http://www.quasimondo.com/StackBlurForCanvas/StackBlurDemo.html
@@ -242,4 +238,5 @@ public class FastBlur {
 
         return (bitmap);
     }
+
 }

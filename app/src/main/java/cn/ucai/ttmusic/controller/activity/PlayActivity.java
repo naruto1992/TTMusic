@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +33,7 @@ import cn.ucai.ttmusic.controller.service.MusicService;
 import cn.ucai.ttmusic.model.I;
 import cn.ucai.ttmusic.model.db.DBManager;
 import cn.ucai.ttmusic.model.db.Music;
+import cn.ucai.ttmusic.model.utils.BackgroundUtil;
 import cn.ucai.ttmusic.model.utils.DialogBuilder;
 import cn.ucai.ttmusic.model.utils.TimeUtil;
 import cn.ucai.ttmusic.model.utils.ToastUtil;
@@ -129,11 +131,6 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
                     discoFragment.pauseRotate();
                     break;
                 case I.Handler.FRONT_MUSIC:
-                    setMusicInfo();
-                    setPlayButton();
-                    discoFragment.startRotate(musicService.getCurrentMusic(), true);
-                    lrcFrament.showLrc(currentMusic);
-                    break;
                 case I.Handler.NEXT_MUSIC:
                     setMusicInfo();
                     setPlayButton();
@@ -164,15 +161,21 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
     };
 
     //////////////////////////////////与界面相关的几个方法//////////////////////////////////
+    //设置主界面信息
     private void setMusicInfo() {
         currentMusic = musicService.getCurrentMusic();
+        //设置歌曲信息
         playMusicName.setText(currentMusic.getTitle());
         playSingerName.setText(currentMusic.getSinger());
-
+        //设置进度条和时间
         playSeekbar.setMax(musicService.getDuration());
         playEndTime.setText(TimeUtil.toTime((int) currentMusic.getTime()));
+        //设置模糊化背景
+        Drawable bg = BackgroundUtil.getDrawableByMusic(PlayActivity.this, currentMusic);
+        blurView.setImageDrawable(bg);
     }
 
+    //设置播放按钮
     private void setPlayButton() {
         if (musicService.isPlay()) {
             playBtn.setImageResource(R.drawable.pause_button);
@@ -181,6 +184,7 @@ public class PlayActivity extends BaseActivity implements SeekBar.OnSeekBarChang
         }
     }
 
+    //设置模式按钮
     private void setPlayMode() {
         playPlayModeBtn.setImageResource(modeIcons[musicService.getPlayMode()]);
     }
